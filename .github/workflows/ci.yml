@@ -1,0 +1,92 @@
+name: Run CI
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          check-latest: true
+          node-version: 22
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Check code style
+        run: |
+          yarn run fmt
+          git --no-pager diff --exit-code
+
+      - name: Upload build
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            .
+            !./node_modules
+            !./.github
+            !./.yarn
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: ci
+    name: Upload
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+      - name: Write ssh key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/ssh-key
+          chmod 600 ~/.ssh/ssh-key
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: Sync
+        run: |
+          # Make all directories
+          ssh -i ~/.ssh/ssh-key -o StrictHostKeyChecking=accept-new "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}" "
+            cd /var/www
+            mkdir -p fileshare/workspaces/{backend,util,frontend}
+          "
+
+          # rsync all relevant files
+          rsync -vhaR --checksum --delete -e "ssh -i ~/.ssh/ssh-key" {backend,frontend}/{dist/,package.json} package.json "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}:/var/www/fileshare/"
+
+          ssh -i ~/.ssh/ssh-key "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}" /bin/bash << 'EOF'
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd /var/www/fileshare
+            corepack prepare
+            yarn config set nodeLinker node-modules
+            yarn workspaces focus --all --production
+            cd ..
+            pm2 restart fileshare || pm2 start fileshare.config.js
+          EOF
+      - run: rm ~/.ssh/ssh-key
+        if: always()
