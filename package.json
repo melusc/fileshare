@@ -1,0 +1,28 @@
+{
+  "author": {
+    "name": "lusc",
+    "url": "https://github.com/melusc"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=23.1.0"
+  },
+  "name": "@lusc/fileshare",
+  "packageManager": "yarn@4.5.1",
+  "private": true,
+  "scripts": {
+    "build": "yarn workspaces foreach -Apiv run build",
+    "clean": "yarn workspaces foreach -Apiv run clean",
+    "dev": "yarn workspaces foreach -Apiv run dev",
+    "fmt": "prettier -w . **/*.svelte && yarn workspaces foreach -Apiv run fmt",
+    "start": "yarn workspace backend start"
+  },
+  "type": "module",
+  "workspaces": [
+    "backend/",
+    "frontend/"
+  ]
+}
