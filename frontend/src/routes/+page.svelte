@@ -32,6 +32,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Fileshare</title>
+</svelte:head>
+
 {#if files && files.length > 0}
 	<div class="files">
 		{#each files as file (file)}
