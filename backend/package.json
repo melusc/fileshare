@@ -19,7 +19,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@lusc/eslint-config": "^1.0.1",
+		"@lusc/eslint-config": "^1.1.0",
 		"@lusc/tsconfig": "^5.1.0",
 		"@types/better-sqlite3": "^7.6.11",
 		"@types/cookie-parser": "^1.4.7",
