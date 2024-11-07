@@ -1,6 +1,5 @@
 import {randomBytes} from 'node:crypto';
 import {readFile, writeFile} from 'node:fs/promises';
-import path from 'node:path';
 
 import {Router} from 'express';
 import multer from 'multer';
@@ -27,7 +26,9 @@ function randomFileId(idLength: number) {
 }
 
 uploadRouter.get('/', (_request, response) => {
-	response.sendFile(path.join(staticRoot, 'upload.html'));
+	response.sendFile('upload.html', {
+		root: staticRoot
+	});
 });
 
 uploadRouter.post(
@@ -35,7 +36,9 @@ uploadRouter.post(
 	multerMiddleware.single('file'),
 	async (request, response) => {
 		if (!request.file) {
-			response.sendFile(path.join(staticRoot, 'upload.html'));
+			response.sendFile('upload.html', {
+				root: staticRoot
+			});
 			return;
 		}
 

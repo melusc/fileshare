@@ -1,5 +1,4 @@
 import {timingSafeEqual} from 'node:crypto';
-import path from 'node:path';
 
 import express, {Router} from 'express';
 
@@ -11,7 +10,9 @@ import {scrypt} from '../util/promisified.ts';
 export const loginRouter: Router = Router();
 
 loginRouter.get('/', (_request, response) => {
-	response.sendFile(path.join(staticRoot, 'login.html'));
+	response.sendFile('login.html', {
+		root: staticRoot
+	});
 });
 
 loginRouter.post(
@@ -24,7 +25,9 @@ loginRouter.post(
 		>;
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
-			response.sendFile(path.join(staticRoot, 'login.html'));
+			response.sendFile('login.html', {
+				root: staticRoot
+			});
 			return;
 		}
 
@@ -36,7 +39,9 @@ loginRouter.post(
 			.get({username: username.trim()});
 
 		if (!databaseResult) {
-			response.sendFile(path.join(staticRoot, 'login.html'));
+			response.sendFile('login.html', {
+				root: staticRoot
+			});
 			return;
 		}
 
@@ -44,7 +49,9 @@ loginRouter.post(
 		const requestHash = await scrypt(password, passwordSalt, 64);
 
 		if (!timingSafeEqual(passwordHash, requestHash)) {
-			response.sendFile(path.join(staticRoot, 'login.html'));
+			response.sendFile('login.html', {
+				root: staticRoot
+			});
 			return;
 		}
 
