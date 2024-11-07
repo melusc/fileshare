@@ -1,27 +1,33 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json"
-  },
-  "devDependencies": {
-    "@lusc/eslint-config": "^1.1.0",
-    "@lusc/tsconfig": "^5.1.0",
-    "@sveltejs/vite-plugin-svelte": "^4.0.0",
-    "@tsconfig/svelte": "^5.0.4",
-    "@typescript-eslint/parser": "^8.13.0",
-    "eslint": "^9.14.0",
-    "eslint-plugin-svelte": "^2.46.0",
-    "svelte": "^5.1.3",
-    "svelte-check": "^4.0.5",
-    "svelte-eslint-parser": "^0.43.0",
-    "tslib": "^2.8.0",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10"
-  }
+	"devDependencies": {
+		"@lusc/eslint-config": "^1.1.0",
+		"@lusc/tsconfig": "^5.1.0",
+		"@sveltejs/adapter-static": "^3.0.6",
+		"@sveltejs/kit": "^2.8.0",
+		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"@typescript-eslint/parser": "^8.13.0",
+		"eslint": "^9.14.0",
+		"eslint-plugin-svelte": "^2.46.0",
+		"svelte": "^5.1.3",
+		"svelte-check": "^4.0.5",
+		"svelte-eslint-parser": "^0.43.0",
+		"tslib": "^2.8.0",
+		"typescript": "^5.6.3",
+		"vite": "^5.4.10"
+	},
+	"license": "MIT",
+	"name": "frontend",
+	"exports": "./dist",
+	"private": true,
+	"engines": {
+		"node": ">=23.1.0"
+	},
+	"scripts": {
+		"build": "vite build",
+		"check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
+		"dev": "vite",
+		"preview": "vite preview"
+	},
+	"type": "module",
+	"version": "0.0.0"
 }

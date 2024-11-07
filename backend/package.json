@@ -1,0 +1,55 @@
+{
+	"author": {
+		"name": "melusc",
+		"url": "https://github.com/melusc"
+	},
+	"dependencies": {
+		"better-sqlite3": "^11.5.0",
+		"cookie-parser": "^1.4.7",
+		"cors": "^2.8.5",
+		"express": "^4.21.1",
+		"file-type": "^19.6.0",
+		"frontend": "workspace:^",
+		"helmet": "^8.0.0",
+		"ip": "^2.0.1",
+		"jsonwebtoken": "^9.0.2",
+		"morgan": "^1.10.0",
+		"multer": "^1.4.5-lts.1",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@lusc/eslint-config": "^1.0.1",
+		"@lusc/tsconfig": "^5.1.0",
+		"@types/better-sqlite3": "^7.6.11",
+		"@types/cookie-parser": "^1.4.7",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^4.17.21",
+		"@types/jsonwebtoken": "^9.0.7",
+		"@types/morgan": "^1.9.9",
+		"@types/multer": "^1.4.12",
+		"@types/node": "^22.9.0",
+		"concurrently": "^9.1.0",
+		"esbuild": "^0.24.0",
+		"eslint": "^9.14.0",
+		"typescript": "^5.6.3"
+	},
+	"engines": {
+		"node": ">=23.1.0"
+	},
+	"license": "MIT",
+	"name": "backend",
+	"private": true,
+	"repository": {
+		"url": "https://github.com/melusc/initiatives-tracker.git"
+	},
+	"scripts": {
+		"build": "tsc && node --run esbuild",
+		"build:w": "node --run esbuild -- --watch",
+		"dev": "concurrently 'yarn:start:w' 'yarn:build:w'",
+		"esbuild": "esbuild --outdir=dist --format=esm --platform=node --bundle --sourcemap --packages=external src/server.ts",
+		"fmt": "eslint --fix",
+		"start": "node --env-file=.env dist/server.js",
+		"start:w": "node --env-file=.env --watch dist/server.js"
+	},
+	"type": "module"
+}
