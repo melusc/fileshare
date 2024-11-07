@@ -1,10 +1,13 @@
 import {readFile} from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import {fileTypeFromBuffer} from 'file-type';
 import helmet from 'helmet';
+import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
@@ -13,9 +16,6 @@ import {apiRouter} from './routes/api.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
 import {jwt} from './session-token.ts';
-import isPathInside from 'is-path-inside';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
 
 const app = express();
 
@@ -123,13 +123,13 @@ app.get('/:id', async (request, response, next) => {
 
 app.get('/', jwt.guard(), (_request, response) => {
 	response.sendFile('index.html', {
-		root: staticRoot
+		root: staticRoot,
 	});
 });
 
 app.use((_request, response) => {
 	response.status(404).sendFile('404.html', {
-		root: staticRoot
+		root: staticRoot,
 	});
 });
 

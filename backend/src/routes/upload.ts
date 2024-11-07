@@ -27,7 +27,7 @@ function randomFileId(idLength: number) {
 
 uploadRouter.get('/', (_request, response) => {
 	response.sendFile('upload.html', {
-		root: staticRoot
+		root: staticRoot,
 	});
 });
 
@@ -37,7 +37,7 @@ uploadRouter.post(
 	async (request, response) => {
 		if (!request.file) {
 			response.sendFile('upload.html', {
-				root: staticRoot
+				root: staticRoot,
 			});
 			return;
 		}

@@ -11,7 +11,7 @@ export const loginRouter: Router = Router();
 
 loginRouter.get('/', (_request, response) => {
 	response.sendFile('login.html', {
-		root: staticRoot
+		root: staticRoot,
 	});
 });
 
@@ -26,7 +26,7 @@ loginRouter.post(
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
 			response.sendFile('login.html', {
-				root: staticRoot
+				root: staticRoot,
 			});
 			return;
 		}
@@ -40,7 +40,7 @@ loginRouter.post(
 
 		if (!databaseResult) {
 			response.sendFile('login.html', {
-				root: staticRoot
+				root: staticRoot,
 			});
 			return;
 		}
@@ -50,7 +50,7 @@ loginRouter.post(
 
 		if (!timingSafeEqual(passwordHash, requestHash)) {
 			response.sendFile('login.html', {
-				root: staticRoot
+				root: staticRoot,
 			});
 			return;
 		}
