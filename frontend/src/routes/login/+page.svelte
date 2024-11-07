@@ -2,6 +2,10 @@
 	import Form from '../../components/form.svelte';
 </script>
 
+<svelte:head>
+	<title>Login | Fileshare</title>
+</svelte:head>
+
 <Form
 	enctype="application/x-www-form-urlencoded"
 	inputs={[

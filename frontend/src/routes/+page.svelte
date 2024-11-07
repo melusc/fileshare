@@ -32,10 +32,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title></title>
-</svelte:head>
-
 {#if files && files.length > 0}
 	<div class="files">
 		{#each files as file (file)}

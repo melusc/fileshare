@@ -2,7 +2,7 @@
 	<title>404 — Page not found</title>
 </svelte:head>
 
-<h1>404 — Page not found</h1>
+<h1>404 — Page not found | Fileshare</h1>
 
 <style>
 	h1 {
