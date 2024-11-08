@@ -3,3 +3,7 @@ export type Upload = {
 	readonly author: string;
 	readonly date: string;
 };
+
+export type Session = {
+	user: string;
+};

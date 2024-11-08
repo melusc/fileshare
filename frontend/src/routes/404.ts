@@ -2,7 +2,9 @@ import {$} from '../$.js';
 import type {Route} from '../route.js';
 
 // None
-export type Parameters404 = {user?: string | undefined};
+export type Parameters404 = {
+	''?: undefined;
+};
 
 export const Route404 = {
 	title: '404 — Page not found',

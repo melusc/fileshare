@@ -9,10 +9,10 @@ import {render} from 'frontend';
 
 export const loginRouter: Router = Router();
 
-loginRouter.get('/', async (request, response) => {
+loginRouter.get('/', async (_request, response) => {
 	response.send(
 		await render('login', {
-			user: jwt.getUser(request),
+			session: response.locals.session,
 			error: undefined,
 		}),
 	);
@@ -30,7 +30,7 @@ loginRouter.post(
 		if (typeof username !== 'string' || typeof password !== 'string') {
 			response.status(400).send(
 				await render('login', {
-					user: jwt.getUser(request),
+					session: response.locals.session,
 					error: 'Missing credentials.',
 				}),
 			);
@@ -47,7 +47,7 @@ loginRouter.post(
 		if (!databaseResult) {
 			response.status(400).send(
 				await render('login', {
-					user: jwt.getUser(request),
+					session: response.locals.session,
 					error: 'Invalid credentials.',
 				}),
 			);
@@ -60,7 +60,7 @@ loginRouter.post(
 		if (!timingSafeEqual(passwordHash, requestHash)) {
 			response.status(400).send(
 				await render('login', {
-					user: jwt.getUser(request),
+					session: response.locals.session,
 					error: 'Invalid credentials.',
 				}),
 			);

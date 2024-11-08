@@ -1,6 +1,8 @@
+import type {Session} from 'types';
+
 import {$} from '../$.js';
 
-export function header(user: string | undefined) {
+export function header(session: Session | undefined) {
 	return $`
 <header>
 	<a href="/">
@@ -10,8 +12,8 @@ export function header(user: string | undefined) {
 		<h1>Upload</h1>
 	</a>
 
-	<a class="login" href=${user ? '/logout' : '/login'}>
-		${user ? 'Log out' : 'Log in'}
+	<a class="login" href=${session ? '/logout' : '/login'}>
+		${session ? 'Log out' : 'Log in'}
 	</a>
 </header>`;
 }
