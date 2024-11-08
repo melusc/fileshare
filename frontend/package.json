@@ -5,7 +5,7 @@
 	"devDependencies": {
 		"@lusc/eslint-config": "^1.1.0",
 		"@lusc/tsconfig": "^5.1.0",
-		"@types/he": "^1",
+		"@types/he": "^1.2.3",
 		"@types/node": "^22.9.0",
 		"esbuild": "^0.24.0",
 		"eslint": "^9.14.0",
