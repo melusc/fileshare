@@ -6,6 +6,7 @@ import multer from 'multer';
 
 import {uploadsDirectory} from '../constants.ts';
 import {jwt} from '../session-token.ts';
+import {database} from '../database.ts';
 
 export const uploadRouter: Router = Router();
 const multerMiddleware = multer({
@@ -62,6 +63,20 @@ uploadRouter.post(
 				break;
 			}
 		}
+
+		database
+			.prepare<{id: string; author: string; date: string}>(
+				`INSERT INTO uploads
+				(id, author, date)
+				values
+				(:id, :author, :date);
+			`,
+			)
+			.run({
+				id,
+				author: response.locals['session'] as string,
+				date: new Date().toISOString(),
+			});
 
 		await writeFile(filePath, request.file.buffer);
 

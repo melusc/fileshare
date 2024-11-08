@@ -33,19 +33,24 @@ export function getUser(): string | false {
 	return loggedInUser;
 }
 
-declare const files: readonly string[];
+type Upload = {
+	readonly id: string;
+	readonly author: string;
+	readonly date: string;
+};
+declare const uploads: ReadonlyArray<Upload>;
 const isReadonlyArray = Array.isArray as (
 	argument0: unknown,
 ) => argument0 is readonly unknown[];
 
-export function getFiles(): string[] {
+export function getUploads(): Upload[] {
 	if (!browser) {
 		return [];
 	}
 
-	if (typeof files !== 'object' || !isReadonlyArray(files)) {
-		throw new TypeError('files was not set');
+	if (typeof uploads !== 'object' || !isReadonlyArray(uploads)) {
+		throw new TypeError('uploads was not set');
 	}
 
-	return [...files];
+	return [...uploads];
 }

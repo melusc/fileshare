@@ -1,4 +1,4 @@
-import {readdir, readFile} from 'node:fs/promises';
+import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -11,6 +11,7 @@ import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
+import {database} from './database.ts';
 import {setHeaders} from './middleware/set-headers.ts';
 import {apiRouter} from './routes/api.ts';
 import {loginRouter} from './routes/login.ts';
@@ -20,7 +21,7 @@ import {svelteKitEngine} from './svelte-kit-engine.ts';
 
 const app = express();
 
-app.engine('html', svelteKitEngine(['formState', 'loggedInUser', 'files']));
+app.engine('html', svelteKitEngine(['formState', 'loggedInUser', 'uploads']));
 app.set('view engine', 'html');
 app.set('views', staticRoot);
 
@@ -126,12 +127,17 @@ app.get('/:id', async (request, response, next) => {
 	}
 });
 
-app.get('/', jwt.guard(), async (request, response) => {
-	const list = await readdir(uploadsDirectory);
+app.get('/', jwt.guard(), (request, response) => {
+	const list = database
+		.prepare<
+			[],
+			{id: string; author: string; date: string}
+		>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
+		.all();
 
 	response.render('index', {
 		loggedInUser: jwt.getUser(request),
-		files: list,
+		uploads: list,
 	});
 });
 

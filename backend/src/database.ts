@@ -34,6 +34,12 @@ database.exec(
 				passwordHash BLOB NOT NULL,
 				passwordSalt BLOB NOT NULL
 		);
+
+		CREATE TABLE IF NOT EXISTS uploads (
+				id TEXT PRIMARY KEY,
+				date TEXT NOT NULL,
+				author TEXT NOT NULL
+		);
 	`,
 );
 
