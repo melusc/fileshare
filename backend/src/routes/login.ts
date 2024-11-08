@@ -2,16 +2,18 @@ import {timingSafeEqual} from 'node:crypto';
 
 import express, {Router} from 'express';
 
-import {staticRoot} from '../constants.ts';
 import {database} from '../database.ts';
 import {jwt} from '../session-token.ts';
 import {scrypt} from '../util/promisified.ts';
 
 export const loginRouter: Router = Router();
 
-loginRouter.get('/', (_request, response) => {
-	response.sendFile('login.html', {
-		root: staticRoot,
+loginRouter.get('/', (request, response) => {
+	response.render('login', {
+		loggedInUser: jwt.getUser(request),
+		formState: {
+			error: null,
+		},
 	});
 });
 
@@ -25,8 +27,11 @@ loginRouter.post(
 		>;
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
-			response.sendFile('login.html', {
-				root: staticRoot,
+			response.status(400).render('login', {
+				loggedInUser: jwt.getUser(request),
+				formState: {
+					error: 'Missing credentials.',
+				},
 			});
 			return;
 		}
@@ -39,8 +44,11 @@ loginRouter.post(
 			.get({username: username.trim()});
 
 		if (!databaseResult) {
-			response.sendFile('login.html', {
-				root: staticRoot,
+			response.status(400).render('login', {
+				loggedInUser: jwt.getUser(request),
+				formState: {
+					error: 'Invalid credentials.',
+				},
 			});
 			return;
 		}
@@ -49,8 +57,11 @@ loginRouter.post(
 		const requestHash = await scrypt(password, passwordSalt, 64);
 
 		if (!timingSafeEqual(passwordHash, requestHash)) {
-			response.sendFile('login.html', {
-				root: staticRoot,
+			response.status(400).render('login', {
+				loggedInUser: jwt.getUser(request),
+				formState: {
+					error: 'Invalid credentials.',
+				},
 			});
 			return;
 		}

@@ -1,23 +1,7 @@
 <script lang="ts">
-	import {browser} from '$app/environment';
+	import {getFiles} from '../state.ts';
 
-	import Loading from '../components/loading.svelte';
-
-	let files = $state<string[]>();
-
-	async function loadFiles() {
-		const response = await fetch('/api/files', {
-			cache: 'no-cache',
-		});
-		const body = await response.json();
-		if (Array.isArray(body)) {
-			files = body as string[];
-		}
-	}
-
-	if (browser) {
-		void loadFiles();
-	}
+	const files = getFiles();
 
 	function clickDelete(id: string) {
 		return async () => {
@@ -49,8 +33,6 @@
 	<div class="files">
 		<a href="/upload">Upload your first file</a>
 	</div>
-{:else}
-	<Loading />
 {/if}
 
 <style>

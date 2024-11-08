@@ -1,4 +1,4 @@
-import {readFile} from 'node:fs/promises';
+import {readdir, readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -16,8 +16,13 @@ import {apiRouter} from './routes/api.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
 import {jwt} from './session-token.ts';
+import {svelteKitEngine} from './svelte-kit-engine.ts';
 
 const app = express();
+
+app.engine('html', svelteKitEngine(['formState', 'loggedInUser', 'files']));
+app.set('view engine', 'html');
+app.set('views', staticRoot);
 
 app.use(cookieParser());
 app.use(
@@ -56,8 +61,8 @@ app.use((request, response, next) => {
 
 app.use((request, response, next) => {
 	if (request.path.includes('\\')) {
-		response.status(404).sendFile('404.html', {
-			root: staticRoot,
+		response.status(404).render('404', {
+			loggedInUser: jwt.getUser(request),
 		});
 		return;
 	}
@@ -121,15 +126,18 @@ app.get('/:id', async (request, response, next) => {
 	}
 });
 
-app.get('/', jwt.guard(), (_request, response) => {
-	response.sendFile('index.html', {
-		root: staticRoot,
+app.get('/', jwt.guard(), async (request, response) => {
+	const list = await readdir(uploadsDirectory);
+
+	response.render('index', {
+		loggedInUser: jwt.getUser(request),
+		files: list,
 	});
 });
 
-app.use((_request, response) => {
-	response.status(404).sendFile('404.html', {
-		root: staticRoot,
+app.use((request, response) => {
+	response.status(404).render('404', {
+		loggedInUser: jwt.getUser(request),
 	});
 });
 
