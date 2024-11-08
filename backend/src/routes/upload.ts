@@ -4,7 +4,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {Router} from 'express';
 import multer from 'multer';
 
-import {staticRoot, uploadsDirectory} from '../constants.ts';
+import {uploadsDirectory} from '../constants.ts';
 import {jwt} from '../session-token.ts';
 
 export const uploadRouter: Router = Router();
@@ -25,9 +25,12 @@ function randomFileId(idLength: number) {
 	};
 }
 
-uploadRouter.get('/', (_request, response) => {
-	response.sendFile('upload.html', {
-		root: staticRoot,
+uploadRouter.get('/', (request, response) => {
+	response.render('upload', {
+		loggedInUser: jwt.getUser(request),
+		formState: {
+			error: null,
+		},
 	});
 });
 
@@ -36,8 +39,11 @@ uploadRouter.post(
 	multerMiddleware.single('file'),
 	async (request, response) => {
 		if (!request.file) {
-			response.sendFile('upload.html', {
-				root: staticRoot,
+			response.render('upload', {
+				loggedInUser: jwt.getUser(request),
+				formState: {
+					error: 'Missing file.',
+				},
 			});
 			return;
 		}

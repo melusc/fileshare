@@ -1,22 +1,7 @@
 <script lang="ts">
-	import {browser} from '$app/environment';
+	import {getUser} from '../state.ts';
 
-	let loggedIn = $state(false);
-
-	async function getLoggedIn() {
-		const response = await fetch('/api/whoami', {
-			cache: 'no-cache',
-		});
-		const body = (await response.json()) as {
-			loggedIn: boolean;
-		};
-
-		loggedIn = body.loggedIn;
-	}
-
-	if (browser) {
-		void getLoggedIn();
-	}
+	const user = getUser();
 </script>
 
 <header>
@@ -27,9 +12,9 @@
 		<h1>Upload</h1>
 	</a>
 
-	<a class="login" href={loggedIn ? '/logout' : '/login'}
-		>{loggedIn ? 'Log out' : 'Log in'}</a
-	>
+	<a class="login" href={user ? '/logout' : '/login'}>
+		{user ? 'Log out' : 'Log in'}
+	</a>
 </header>
 
 <style>

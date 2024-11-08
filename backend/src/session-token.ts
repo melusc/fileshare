@@ -1,6 +1,6 @@
 import {randomBytes} from 'node:crypto';
 
-import type {RequestHandler, Response} from 'express';
+import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
 
 const EXPIRY = 7;
@@ -23,20 +23,16 @@ class JWT {
 		}
 	}
 
-	guard(allowLoggedOut = false): RequestHandler {
+	guard(): RequestHandler {
 		return (request, response, next) => {
-			const cookies = request.cookies as Record<string, string>;
+			const user = this.getUser(request);
 
-			if ('session' in cookies) {
-				const decoded = this.#verify(cookies['session']);
-
-				if (decoded) {
-					Object.defineProperty(response.locals, 'session', {
-						value: decoded,
-					});
-					next();
-					return;
-				}
+			if (user) {
+				Object.defineProperty(response.locals, 'session', {
+					value: user,
+				});
+				next();
+				return;
 			}
 
 			response.clearCookie('session', {
@@ -44,14 +40,7 @@ class JWT {
 				secure: true,
 			});
 
-			if (allowLoggedOut) {
-				Object.defineProperty(response.locals, 'session', {
-					value: false,
-				});
-				next();
-			} else {
-				response.redirect(302, '/login');
-			}
+			response.redirect(302, '/login');
 		};
 	}
 
@@ -64,6 +53,18 @@ class JWT {
 			secure: true,
 			expires,
 		});
+	}
+
+	getUser(request: Request) {
+		const cookies = request.cookies as Record<string, string>;
+
+		if ('session' in cookies) {
+			const decoded = this.#verify(cookies['session']);
+
+			return decoded;
+		}
+
+		return false;
 	}
 }
 

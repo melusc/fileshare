@@ -1,5 +1,8 @@
 <script lang="ts">
 	import type {HTMLInputTypeAttribute} from 'svelte/elements';
+	import {getFormState} from '../state.ts';
+
+	const {error} = getFormState();
 
 	const {
 		enctype,
@@ -16,10 +19,14 @@
 	} = $props();
 </script>
 
+{#if error}
+	<div class="error">{error}</div>
+{/if}
+
 <form method="POST" {enctype}>
 	{#each inputs as { label, name, type } (name)}
 		<label for={name}>{label}</label>
-		<input {type} {name} id={name} />
+		<input {type} {name} id={name} required={type !== 'checkbox'} />
 	{/each}
 
 	<input type="submit" name="submit" class="submit" value={submitLabel} />
@@ -34,6 +41,10 @@
 
 		grid-template-rows: 1fr 1fr 1fr;
 		grid-template-columns: 1fr 1fr;
+	}
+
+	.error {
+		color: var(--error);
 	}
 
 	input {
