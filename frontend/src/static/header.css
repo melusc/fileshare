@@ -1,0 +1,32 @@
+header {
+	width: 100%;
+	padding: 1em;
+
+	position: sticky;
+	top: 0;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	gap: 2em;
+
+	background-color: var(--theme-primary);
+
+	user-select: none;
+	box-shadow: var(--box-shadow);
+
+	color: var(--text-light);
+}
+
+header h1 {
+	margin: 0;
+}
+
+header a {
+	font-weight: 600;
+}
+
+header .login {
+	margin-left: auto;
+}
