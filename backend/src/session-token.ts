@@ -14,12 +14,12 @@ class JWT {
 		});
 	}
 
-	#verify(token: string) {
+	#verify(token: string): string | undefined {
 		try {
 			const decoded = jwtProvider.verify(token, this.#secret);
 			return (decoded as {user: string}).user;
 		} catch {
-			return false;
+			return;
 		}
 	}
 
@@ -55,7 +55,7 @@ class JWT {
 		});
 	}
 
-	getUser(request: Request) {
+	getUser(request: Request): string | undefined {
 		const cookies = request.cookies as Record<string, string>;
 
 		if ('session' in cookies) {
@@ -64,7 +64,7 @@ class JWT {
 			return decoded;
 		}
 
-		return false;
+		return;
 	}
 }
 

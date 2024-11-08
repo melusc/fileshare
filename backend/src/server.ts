@@ -9,21 +9,17 @@ import {fileTypeFromBuffer} from 'file-type';
 import helmet from 'helmet';
 import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
+import {render} from 'frontend';
+import type {Upload} from 'types';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
 import {database} from './database.ts';
 import {setHeaders} from './middleware/set-headers.ts';
-import {apiRouter} from './routes/api.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
 import {jwt} from './session-token.ts';
-import {svelteKitEngine} from './svelte-kit-engine.ts';
 
 const app = express();
-
-app.engine('html', svelteKitEngine(['formState', 'loggedInUser', 'uploads']));
-app.set('view engine', 'html');
-app.set('views', staticRoot);
 
 app.use(cookieParser());
 app.use(
@@ -60,11 +56,11 @@ app.use((request, response, next) => {
 	next();
 });
 
-app.use((request, response, next) => {
+app.use(async (request, response, next) => {
 	if (request.path.includes('\\')) {
-		response.status(404).render('404', {
-			loggedInUser: jwt.getUser(request),
-		});
+		response
+			.status(404)
+			.send(await render('404', {user: jwt.getUser(request)}));
 		return;
 	}
 
@@ -81,7 +77,6 @@ app.use(
 
 app.use('/login', loginRouter);
 app.use('/upload', uploadRouter);
-app.use('/api', apiRouter);
 
 app.use('/logout', (_request, response) => {
 	response.clearCookie('session', {
@@ -127,24 +122,21 @@ app.get('/:id', async (request, response, next) => {
 	}
 });
 
-app.get('/', jwt.guard(), (request, response) => {
+app.get('/', jwt.guard(), async (request, response) => {
 	const list = database
 		.prepare<
 			[],
-			{id: string; author: string; date: string}
+			Upload
 		>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
 		.all();
 
-	response.render('index', {
-		loggedInUser: jwt.getUser(request),
-		uploads: list,
-	});
+	response.send(
+		await render('index', {user: jwt.getUser(request), uploads: list}),
+	);
 });
 
-app.use((request, response) => {
-	response.status(404).render('404', {
-		loggedInUser: jwt.getUser(request),
-	});
+app.use(async (request, response) => {
+	response.status(404).send(await render('404', {user: jwt.getUser(request)}));
 });
 
 app.listen(3178, () => {

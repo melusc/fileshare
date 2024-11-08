@@ -32,6 +32,7 @@
 		"concurrently": "^9.1.0",
 		"esbuild": "^0.24.0",
 		"eslint": "^9.14.0",
+		"types": "workspace:^",
 		"typescript": "^5.6.3"
 	},
 	"engines": {
@@ -41,7 +42,7 @@
 	"name": "backend",
 	"private": true,
 	"repository": {
-		"url": "https://github.com/melusc/initiatives-tracker.git"
+		"url": "https://github.com/melusc/fileshare.git"
 	},
 	"scripts": {
 		"build": "tsc && node --run esbuild",

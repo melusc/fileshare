@@ -7,4 +7,17 @@
 	--box-shadow-top: 0px -10px 15px -3px rgba(0, 0, 0, 0.1);
 	--error: #ff4136;
 	--success: #2ecc40;
+	--outline: #0d6efd;
+}
+
+.error {
+	color: var(--error);
+}
+
+main {
+	padding: 3em;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }

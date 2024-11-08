@@ -1,12 +1,15 @@
 import {randomBytes} from 'node:crypto';
-import {readFile, writeFile} from 'node:fs/promises';
+import {readFile, unlink, writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
 
-import {Router} from 'express';
+import express, {Router} from 'express';
+import {render} from 'frontend';
+import isPathInside from 'is-path-inside';
 import multer from 'multer';
 
 import {uploadsDirectory} from '../constants.ts';
-import {jwt} from '../session-token.ts';
 import {database} from '../database.ts';
+import {jwt} from '../session-token.ts';
 
 export const uploadRouter: Router = Router();
 const multerMiddleware = multer({
@@ -26,13 +29,14 @@ function randomFileId(idLength: number) {
 	};
 }
 
-uploadRouter.get('/', (request, response) => {
-	response.render('upload', {
-		loggedInUser: jwt.getUser(request),
-		formState: {
-			error: null,
-		},
-	});
+uploadRouter.get('/', async (request, response) => {
+	response.send(
+		await render('upload', {
+			user: jwt.getUser(request),
+			error: undefined,
+		}),
+	);
+	return;
 });
 
 uploadRouter.post(
@@ -40,12 +44,12 @@ uploadRouter.post(
 	multerMiddleware.single('file'),
 	async (request, response) => {
 		if (!request.file) {
-			response.render('upload', {
-				loggedInUser: jwt.getUser(request),
-				formState: {
+			response.status(400).send(
+				await render('upload', {
+					user: jwt.getUser(request),
 					error: 'Missing file.',
-				},
-			});
+				}),
+			);
 			return;
 		}
 
@@ -81,5 +85,44 @@ uploadRouter.post(
 		await writeFile(filePath, request.file.buffer);
 
 		response.redirect(`/${id}`);
+	},
+);
+
+uploadRouter.post(
+	'/delete',
+	jwt.guard(),
+	express.urlencoded({extended: false}),
+	async (request, response) => {
+		const {id} = (request.body ?? {}) as Record<string, unknown>;
+
+		if (typeof id !== 'string') {
+			response.status(400).json({
+				error: 'Missing id.',
+			});
+			return;
+		}
+
+		const uploadPath = fileURLToPath(new URL(id, uploadsDirectory));
+		if (!isPathInside(uploadPath, fileURLToPath(uploadsDirectory))) {
+			return response.status(404).json({
+				error: 'Unknown id.',
+			});
+		}
+
+		try {
+			database
+				.prepare<{id: string}>(
+					`DELETE FROM uploads
+				WHERE id = :id;`,
+				)
+				.run({
+					id,
+				});
+			await unlink(new URL(id, uploadsDirectory));
+		} catch {
+			// Do nothing, file doesn't exist
+		}
+
+		response.redirect('/');
 	},
 );

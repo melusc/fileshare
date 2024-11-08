@@ -7,4 +7,4 @@ export const uploadsDirectory = new URL('uploads/', dataDirectory);
 await mkdir(uploadsDirectory, {recursive: true});
 export const databasePath = new URL('database.db', dataDirectory);
 
-export const staticRoot = fileURLToPath(import.meta.resolve('frontend'));
+export const staticRoot = fileURLToPath(import.meta.resolve('frontend/static'));

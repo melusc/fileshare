@@ -5,16 +5,17 @@ import express, {Router} from 'express';
 import {database} from '../database.ts';
 import {jwt} from '../session-token.ts';
 import {scrypt} from '../util/promisified.ts';
+import {render} from 'frontend';
 
 export const loginRouter: Router = Router();
 
-loginRouter.get('/', (request, response) => {
-	response.render('login', {
-		loggedInUser: jwt.getUser(request),
-		formState: {
-			error: null,
-		},
-	});
+loginRouter.get('/', async (request, response) => {
+	response.send(
+		await render('login', {
+			user: jwt.getUser(request),
+			error: undefined,
+		}),
+	);
 });
 
 loginRouter.post(
@@ -27,12 +28,12 @@ loginRouter.post(
 		>;
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
-			response.status(400).render('login', {
-				loggedInUser: jwt.getUser(request),
-				formState: {
+			response.status(400).send(
+				await render('login', {
+					user: jwt.getUser(request),
 					error: 'Missing credentials.',
-				},
-			});
+				}),
+			);
 			return;
 		}
 
@@ -44,12 +45,12 @@ loginRouter.post(
 			.get({username: username.trim()});
 
 		if (!databaseResult) {
-			response.status(400).render('login', {
-				loggedInUser: jwt.getUser(request),
-				formState: {
+			response.status(400).send(
+				await render('login', {
+					user: jwt.getUser(request),
 					error: 'Invalid credentials.',
-				},
-			});
+				}),
+			);
 			return;
 		}
 
@@ -57,12 +58,12 @@ loginRouter.post(
 		const requestHash = await scrypt(password, passwordSalt, 64);
 
 		if (!timingSafeEqual(passwordHash, requestHash)) {
-			response.status(400).render('login', {
-				loggedInUser: jwt.getUser(request),
-				formState: {
+			response.status(400).send(
+				await render('login', {
+					user: jwt.getUser(request),
 					error: 'Invalid credentials.',
-				},
-			});
+				}),
+			);
 			return;
 		}
 
