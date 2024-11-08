@@ -25,8 +25,8 @@
 	"scripts": {
 		"build": "vite build",
 		"check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
-		"dev": "vite",
-		"preview": "vite preview"
+		"dev": "vite build --watch",
+		"fmt": "eslint --fix"
 	},
 	"type": "module",
 	"version": "0.0.0"

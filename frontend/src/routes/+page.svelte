@@ -1,16 +1,19 @@
 <script lang="ts">
-	import {getFiles} from '../state.ts';
+	import {getUploads} from '../state.ts';
 
-	const files = getFiles();
+	let uploads = $state(getUploads());
 
 	function clickDelete(id: string) {
 		return async () => {
 			try {
-				await fetch(`/api/file/${id}`, {
+				const response = await fetch(`/api/file/${id}`, {
 					method: 'delete',
 				});
-				const index = files!.indexOf(id);
-				files!.splice(index, 1);
+				const body = (await response.json()) as {success?: boolean};
+				if (body.success) {
+					const index = uploads!.findIndex(upload => upload.id === id);
+					uploads!.splice(index, 1);
+				}
 			} catch {}
 		};
 	}
@@ -20,52 +23,65 @@
 	<title>Fileshare</title>
 </svelte:head>
 
-{#if files && files.length > 0}
-	<div class="files">
-		{#each files as file (file)}
-			<div class="file-entry">
-				<a class="file-link" href={`/${file}`}>{file}</a>
-				<button class="file-delete" onclick={clickDelete(file)}>Delete</button>
+{#if uploads && uploads.length > 0}
+	<div class="uploads">
+		<div class="title">
+			<div>ID</div>
+			<div>Author</div>
+			<div>Date</div>
+			<div>Delete Upload</div>
+		</div>
+		{#each uploads as { id, author, date } (id)}
+			<div class="upload-entry">
+				<a class="upload-link" href={`/${id}`}>{id}</a>
+				<div class="upload-author">{author}</div>
+				<div class="upload-date">{new Date(date).toLocaleString()}</div>
+				<button class="upload-delete" onclick={clickDelete(id)}>Delete</button>
 			</div>
 		{/each}
 	</div>
-{:else if files}
-	<div class="files">
+{:else if uploads}
+	<div class="uploads">
 		<a href="/upload">Upload your first file</a>
 	</div>
 {/if}
 
 <style>
-	.files {
-		display: flex;
+	.title {
+		font-weight: 600;
+	}
+
+	.upload-entry,
+	.title {
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-column: span 4;
+	}
+
+	.uploads {
+		display: grid;
 		flex-direction: column;
+		grid-template-columns: repeat(4, 1fr);
 		row-gap: 1em;
 		width: 100%;
 	}
 
-	.file-entry {
-		display: flex;
-		flex-direction: row;
-	}
-
-	.file-delete {
-		margin-left: auto;
-
+	.upload-delete {
 		outline: none;
 		border: 2px solid var(--theme-primary);
 		border-radius: 5px;
 		background: none;
 		padding: 5px 1em;
 		cursor: pointer;
-
+		width: max-content;
 		transition: scale 50ms ease-in-out;
 	}
 
-	.file-delete:focus {
+	.upload-delete:focus {
 		outline: 2px dashed #0d6efd;
 	}
 
-	.file-delete:active {
+	.upload-delete:active {
 		scale: 0.95;
 	}
 </style>
