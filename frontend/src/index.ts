@@ -1,5 +1,7 @@
 import {readFile} from 'node:fs/promises';
 
+import type {Session} from 'types';
+
 import {$, type SafeString} from './$.js';
 import {header} from './components/header.js';
 import {type Parameters404, Route404} from './routes/404.js';
@@ -16,7 +18,7 @@ type Arguments = {
 
 export async function render<View extends keyof Arguments>(
 	view: View,
-	variables: Arguments[View] & {user: string | undefined},
+	variables: Arguments[View] & {session: Session | undefined},
 ) {
 	let template = await readFile(
 		new URL('../src/app.html', import.meta.url),
@@ -68,7 +70,7 @@ export async function render<View extends keyof Arguments>(
 		.replace(
 			'%body%',
 			$`
-				${header(variables.user)}
+				${header(variables.session)}
 				<main>
 					${body}
 				</main>

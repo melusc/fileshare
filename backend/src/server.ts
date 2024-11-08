@@ -46,6 +46,8 @@ app.use(
 	}),
 );
 
+app.use(jwt.setResponseLocals());
+
 app.use((request, response, next) => {
 	const segments = request.path.split('/');
 	if (segments.includes('..')) {
@@ -60,7 +62,7 @@ app.use(async (request, response, next) => {
 	if (request.path.includes('\\')) {
 		response
 			.status(404)
-			.send(await render('404', {user: jwt.getUser(request)}));
+			.send(await render('404', {session: response.locals.session}));
 		return;
 	}
 
@@ -122,7 +124,7 @@ app.get('/:id', async (request, response, next) => {
 	}
 });
 
-app.get('/', jwt.guard(), async (request, response) => {
+app.get('/', jwt.guard(), async (_request, response) => {
 	const list = database
 		.prepare<
 			[],
@@ -131,12 +133,14 @@ app.get('/', jwt.guard(), async (request, response) => {
 		.all();
 
 	response.send(
-		await render('index', {user: jwt.getUser(request), uploads: list}),
+		await render('index', {session: response.locals.session, uploads: list}),
 	);
 });
 
-app.use(async (request, response) => {
-	response.status(404).send(await render('404', {user: jwt.getUser(request)}));
+app.use(async (_request, response) => {
+	response
+		.status(404)
+		.send(await render('404', {session: response.locals.session}));
 });
 
 app.listen(3178, () => {

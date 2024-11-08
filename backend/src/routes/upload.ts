@@ -29,10 +29,10 @@ function randomFileId(idLength: number) {
 	};
 }
 
-uploadRouter.get('/', async (request, response) => {
+uploadRouter.get('/', async (_request, response) => {
 	response.send(
 		await render('upload', {
-			user: jwt.getUser(request),
+			session: response.locals.session,
 			error: undefined,
 		}),
 	);
@@ -46,7 +46,7 @@ uploadRouter.post(
 		if (!request.file) {
 			response.status(400).send(
 				await render('upload', {
-					user: jwt.getUser(request),
+					session: response.locals.session,
 					error: 'Missing file.',
 				}),
 			);
@@ -78,7 +78,7 @@ uploadRouter.post(
 			)
 			.run({
 				id,
-				author: response.locals['session'] as string,
+				author: response.locals.session!.user,
 				date: new Date().toISOString(),
 			});
 
