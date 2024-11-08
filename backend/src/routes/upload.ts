@@ -104,9 +104,10 @@ uploadRouter.post(
 
 		const uploadPath = fileURLToPath(new URL(id, uploadsDirectory));
 		if (!isPathInside(uploadPath, fileURLToPath(uploadsDirectory))) {
-			return response.status(404).json({
+			response.status(404).json({
 				error: 'Unknown id.',
 			});
+			return;
 		}
 
 		try {
