@@ -543,7 +543,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/he@npm:^1":
+"@types/he@npm:^1.2.3":
   version: 1.2.3
   resolution: "@types/he@npm:1.2.3"
   checksum: 10c0/562e4ec00e31e3d464e79e6da4b8a5c21999d38ceca6a8facaa96e89c2d646f410bb58bb81f48a7472aeb4655ce40d27b7d77e5a4fa5a2d9caa0f3037caab5b7
@@ -2136,7 +2136,7 @@ __metadata:
   dependencies:
     "@lusc/eslint-config": "npm:^2.0.6"
     "@lusc/tsconfig": "npm:^5.1.0"
-    "@types/he": "npm:^1"
+    "@types/he": "npm:^1.2.3"
     "@types/node": "npm:^22.9.0"
     esbuild: "npm:^0.24.0"
     eslint: "npm:^9.14.0"
