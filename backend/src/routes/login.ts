@@ -1,11 +1,12 @@
+import type {Buffer} from 'node:buffer';
 import {timingSafeEqual} from 'node:crypto';
 
 import express, {Router} from 'express';
+import {render} from 'frontend';
 
 import {database} from '../database.ts';
 import {jwt} from '../session-token.ts';
 import {scrypt} from '../util/promisified.ts';
-import {render} from 'frontend';
 
 export const loginRouter: Router = Router();
 

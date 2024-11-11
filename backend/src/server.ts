@@ -6,10 +6,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import {fileTypeFromBuffer} from 'file-type';
+import {render} from 'frontend';
 import helmet from 'helmet';
 import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
-import {render} from 'frontend';
 import type {Upload} from 'types';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
