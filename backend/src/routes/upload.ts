@@ -9,6 +9,7 @@ import multer from 'multer';
 
 import {uploadsDirectory} from '../constants.ts';
 import {database} from '../database.ts';
+import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
 import {jwt} from '../session-token.ts';
 
 export const uploadRouter: Router = Router();
@@ -29,7 +30,7 @@ function randomFileId(idLength: number) {
 	};
 }
 
-uploadRouter.get('/', async (_request, response) => {
+uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
 		await render('upload', {
 			session: response.locals.session,
@@ -41,6 +42,7 @@ uploadRouter.get('/', async (_request, response) => {
 
 uploadRouter.post(
 	'/',
+	rateLimitPost(),
 	multerMiddleware.single('file'),
 	async (request, response) => {
 		if (!request.file) {
@@ -90,6 +92,7 @@ uploadRouter.post(
 
 uploadRouter.post(
 	'/delete',
+	rateLimitPost(),
 	jwt.guard(),
 	express.urlencoded({extended: false}),
 	async (request, response) => {
