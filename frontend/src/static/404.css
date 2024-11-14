@@ -1,0 +1,6 @@
+.info-not-found {
+	margin-top: 3em;
+	font-size: 60px;
+
+	color: var(--theme-primary);
+}

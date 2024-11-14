@@ -7,7 +7,7 @@ export type ParametersUpload = {
 
 export const RouteUpload = {
 	title: 'Upload',
-	styles: ['upload.css', 'form.css'],
+	styles: ['form.css'],
 
 	render({error}: ParametersUpload) {
 		return form(

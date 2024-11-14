@@ -7,7 +7,7 @@ export type ParametersLogin = {
 
 export const RouteLogin = {
 	title: 'Login',
-	styles: ['login.css', 'form.css'],
+	styles: ['form.css'],
 
 	render({error}: ParametersLogin) {
 		return form(
