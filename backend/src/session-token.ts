@@ -1,9 +1,10 @@
 import {randomBytes} from 'node:crypto';
 
-import type {RequestHandler, Response} from 'express';
+import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
 
 const EXPIRY = 7;
+const RENEWAL_TIME = 24 * 60 * 60; // 1 day
 
 class JWT {
 	#secret = randomBytes(128);
@@ -14,24 +15,25 @@ class JWT {
 		});
 	}
 
-	#verify(token: string): string | undefined {
+	#verify(request: Request): string | undefined {
+		const cookies = request.cookies as Record<string, string>;
+		const sessionCookie = cookies['session'];
+
+		if (!sessionCookie) {
+			return;
+		}
+
 		try {
-			const decoded = jwtProvider.verify(token, this.#secret);
+			const decoded = jwtProvider.verify(sessionCookie, this.#secret);
 			return (decoded as {user: string}).user;
 		} catch {
 			return;
 		}
 	}
 
-	setResponseLocals(): RequestHandler {
+	responseLocalsMiddleware(): RequestHandler {
 		return (request, response, next) => {
-			const cookies = request.cookies as Record<string, string>;
-
-			let user: string | undefined;
-
-			if ('session' in cookies) {
-				user = this.#verify(cookies['session']);
-			}
+			const user = this.#verify(request);
 
 			Object.defineProperty(response.locals, 'session', {
 				value: user
@@ -44,9 +46,33 @@ class JWT {
 		};
 	}
 
+	cookieRenewalMiddleware(): RequestHandler {
+		return (request, response, next) => {
+			if (!this.#verify(request)) {
+				next();
+				return;
+			}
+
+			const cookies = request.cookies as Record<string, string>;
+			const sessionCookie = cookies['session'];
+
+			const {user, exp} = jwtProvider.decode(sessionCookie!) as {
+				exp: number;
+				user: string;
+			};
+			const now = Math.floor(Date.now() / 1000);
+
+			if (exp > now && exp - now < RENEWAL_TIME) {
+				this.setCookie(user, response);
+			}
+
+			next();
+		};
+	}
+
 	guard(): RequestHandler {
-		return (_request, response, next) => {
-			if (response.locals.session) {
+		return (request, response, next) => {
+			if (this.#verify(request)) {
 				next();
 				return;
 			}

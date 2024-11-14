@@ -46,7 +46,8 @@ app.use(
 	}),
 );
 
-app.use(jwt.setResponseLocals());
+app.use(jwt.responseLocalsMiddleware());
+app.use(jwt.cookieRenewalMiddleware());
 
 app.use((request, response, next) => {
 	const segments = request.path.split('/');
