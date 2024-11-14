@@ -4,6 +4,7 @@ import {timingSafeEqual} from 'node:crypto';
 import express, {Router} from 'express';
 import {render} from 'frontend';
 
+import csrf from '../csrf.ts';
 import {database} from '../database.ts';
 import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
 import {jwt} from '../session-token.ts';
@@ -16,6 +17,7 @@ loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('login', {
 			session: response.locals.session,
 			error: undefined,
+			csrfToken: csrf.generate(false),
 		}),
 	);
 });
@@ -25,16 +27,26 @@ loginRouter.post(
 	rateLimitPost(),
 	express.urlencoded({extended: false}),
 	async (request, response) => {
-		const {username, password} = (request.body ?? {}) as Record<
+		const {username, password, csrfToken} = (request.body ?? {}) as Record<
 			string,
 			unknown
 		>;
+
+		if (!csrf.validate(false, csrfToken)) {
+			await render('login', {
+				session: response.locals.session,
+				error: 'Invalid CSRF token.',
+				csrfToken: csrf.generate(false),
+			});
+			return;
+		}
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
 			response.status(400).send(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Missing credentials.',
+					csrfToken: csrf.generate(false),
 				}),
 			);
 			return;
@@ -52,6 +64,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
+					csrfToken: csrf.generate(false),
 				}),
 			);
 			return;
@@ -65,6 +78,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
+					csrfToken: csrf.generate(false),
 				}),
 			);
 			return;

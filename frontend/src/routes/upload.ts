@@ -3,13 +3,14 @@ import type {Route} from '../route.js';
 
 export type ParametersUpload = {
 	readonly error: string | undefined;
+	readonly csrfToken: string;
 };
 
 export const RouteUpload = {
 	title: 'Upload',
 	styles: ['form.css'],
 
-	render({error}: ParametersUpload) {
+	render({error, csrfToken}: ParametersUpload) {
 		return form(
 			'multipart/form-data',
 			[
@@ -25,6 +26,7 @@ export const RouteUpload = {
 				},
 			],
 			'Upload',
+			csrfToken,
 			error,
 		);
 	},
