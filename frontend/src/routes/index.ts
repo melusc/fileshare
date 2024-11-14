@@ -4,14 +4,16 @@ import {$} from '../$.js';
 import type {Route} from '../route.js';
 
 export type ParametersIndex = {
-	uploads: readonly Upload[];
+	readonly uploads: readonly Upload[];
+	readonly error?: string;
+	readonly csrfToken: string;
 };
 
 export const RouteIndex = {
 	styles: ['index.css'],
 	title: undefined,
 
-	render({uploads}: ParametersIndex) {
+	render({uploads, error, csrfToken}: ParametersIndex) {
 		if (uploads.length === 0) {
 			return $`
 				<div class="uploads">
@@ -28,13 +30,15 @@ export const RouteIndex = {
 					<time class="upload-date" datetime="${date}">${date}</time>
 					<form action="/upload/delete" method="POST">
 						<input name="id" value="${id}" type="hidden">
-						<input class="upload-delete" type="submit" value="Delete" />
+						<input name="csrfToken" value="${csrfToken}" type="hidden">
+						<input class="upload-delete" type="submit" value="Delete">
 					</form>
 				</div>`,
 		);
 
 		return $`
 			<div class="uploads">
+				${error && $`<div class="error">${error}</div>`}
 				<div class="uploads-title">
 					<div>ID</div>
 					<div>Author</div>

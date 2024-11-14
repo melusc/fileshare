@@ -3,13 +3,14 @@ import type {Route} from '../route.js';
 
 export type ParametersLogin = {
 	readonly error: string | undefined;
+	readonly csrfToken: string;
 };
 
 export const RouteLogin = {
 	title: 'Login',
 	styles: ['form.css'],
 
-	render({error}: ParametersLogin) {
+	render({error, csrfToken}: ParametersLogin) {
 		return form(
 			'application/x-www-form-urlencoded',
 			[
@@ -25,6 +26,7 @@ export const RouteLogin = {
 				},
 			],
 			'Login',
+			csrfToken,
 			error,
 		);
 	},

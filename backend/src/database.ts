@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {parseArgs} from 'node:util';
 
 import Database, {type Database as TDatabase} from 'better-sqlite3';
+import type {Upload} from 'types';
 
 import {databasePath} from './constants.ts';
 import {scrypt} from './util/promisified.ts';
@@ -78,4 +79,13 @@ if (shouldCreateLogin) {
 		});
 
 	console.log('Created user "%s" with password %s', username, password);
+}
+
+export function getUploads() {
+	return database
+		.prepare<
+			[],
+			Upload
+		>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
+		.all();
 }

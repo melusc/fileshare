@@ -8,6 +8,7 @@ export function form(
 		type: 'checkbox' | 'text' | 'file' | 'password';
 	}>,
 	submitLabel: string,
+	csrfToken: string,
 	uploadError: string | undefined,
 ) {
 	return $`
@@ -21,6 +22,7 @@ ${uploadError && $`<div class="error">${uploadError}</div>`}
 	`,
 	)}
 
-	<input type="submit" name="submit" class="submit" value=${submitLabel} />
+	<input type="hidden" name="csrfToken" value="${csrfToken}" />
+	<input type="submit" name="submit" class="submit" value="${submitLabel}" />
 </form>`;
 }

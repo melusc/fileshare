@@ -10,10 +10,10 @@ import {render} from 'frontend';
 import helmet from 'helmet';
 import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
-import type {Upload} from 'types';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
-import {database} from './database.ts';
+import csrf from './csrf.ts';
+import {getUploads} from './database.ts';
 import {
 	rateLimitGetDatabase,
 	rateLimitGetStatic,
@@ -135,15 +135,12 @@ app.get(
 	rateLimitGetDatabase(),
 	jwt.guard(),
 	async (_request, response) => {
-		const list = database
-			.prepare<
-				[],
-				Upload
-			>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
-			.all();
-
 		response.send(
-			await render('index', {session: response.locals.session, uploads: list}),
+			await render('index', {
+				session: response.locals.session,
+				uploads: getUploads(),
+				csrfToken: csrf.generate(response.locals.session!.user),
+			}),
 		);
 	},
 );

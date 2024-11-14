@@ -8,7 +8,8 @@ import isPathInside from 'is-path-inside';
 import multer from 'multer';
 
 import {uploadsDirectory} from '../constants.ts';
-import {database} from '../database.ts';
+import csrf from '../csrf.ts';
+import {database, getUploads} from '../database.ts';
 import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
 import {jwt} from '../session-token.ts';
 
@@ -35,6 +36,7 @@ uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('upload', {
 			session: response.locals.session,
 			error: undefined,
+			csrfToken: csrf.generate(response.locals.session!.user),
 		}),
 	);
 	return;
@@ -45,11 +47,26 @@ uploadRouter.post(
 	rateLimitPost(),
 	multerMiddleware.single('file'),
 	async (request, response) => {
+		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
+			.csrfToken;
+
+		if (!csrf.validate(response.locals.session!.user, csrfToken)) {
+			response.status(400).send(
+				await render('upload', {
+					session: response.locals.session,
+					error: 'Invalid CSRF token.',
+					csrfToken: csrf.generate(response.locals.session!.user),
+				}),
+			);
+			return;
+		}
+
 		if (!request.file) {
 			response.status(400).send(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Missing file.',
+					csrfToken: csrf.generate(response.locals.session!.user),
 				}),
 			);
 			return;
@@ -96,29 +113,44 @@ uploadRouter.post(
 	jwt.guard(),
 	express.urlencoded({extended: false}),
 	async (request, response) => {
+		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
+			.csrfToken;
+
+		if (!csrf.validate(response.locals.session!.user, csrfToken)) {
+			response.status(400).send(
+				await render('index', {
+					session: response.locals.session,
+					uploads: getUploads(),
+					csrfToken: csrf.generate(response.locals.session!.user),
+					error: 'Invalid CSRF token.',
+				}),
+			);
+			return;
+		}
+
 		const {id} = (request.body ?? {}) as Record<string, unknown>;
 
 		if (typeof id !== 'string') {
-			response.status(400).json({
-				error: 'Missing id.',
-			});
+			response.status(400).send(
+				await render('index', {
+					session: response.locals.session,
+					uploads: getUploads(),
+					csrfToken: csrf.generate(response.locals.session!.user),
+					error: 'Missing id.',
+				}),
+			);
 			return;
 		}
 
 		const uploadPath = fileURLToPath(new URL(id, uploadsDirectory));
 		if (!isPathInside(uploadPath, fileURLToPath(uploadsDirectory))) {
-			response.status(404).json({
-				error: 'Unknown id.',
-			});
+			response.redirect('/');
 			return;
 		}
 
 		try {
 			database
-				.prepare<{id: string}>(
-					`DELETE FROM uploads
-				WHERE id = :id;`,
-				)
+				.prepare<{id: string}>('DELETE FROM uploads WHERE id = :id;')
 				.run({
 					id,
 				});
