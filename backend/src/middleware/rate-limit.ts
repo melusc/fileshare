@@ -1,4 +1,4 @@
-import rateLimit, { type RateLimitRequestHandler } from 'express-rate-limit';
+import rateLimit, {type RateLimitRequestHandler} from 'express-rate-limit';
 
 // Separate rate limits per kind of request
 // One for GET where there aren't any database reads
@@ -7,7 +7,7 @@ import rateLimit, { type RateLimitRequestHandler } from 'express-rate-limit';
 // These use different stores for rate limits
 // so visiting / doesn't affect the rate limit for accessing a file
 
-let getStatic: RateLimitRequestHandler | undefined; 
+let getStatic: RateLimitRequestHandler | undefined;
 export function rateLimitGetStatic() {
 	getStatic ??= rateLimit({
 		windowMs: 5 * 60 * 1000, // 5 minutes
@@ -18,7 +18,7 @@ export function rateLimitGetStatic() {
 	return getStatic;
 }
 
-let getDatabase: RateLimitRequestHandler | undefined
+let getDatabase: RateLimitRequestHandler | undefined;
 export function rateLimitGetDatabase() {
 	getDatabase ??= rateLimit({
 		windowMs: 5 * 60 * 1000,
@@ -29,7 +29,7 @@ export function rateLimitGetDatabase() {
 	return getDatabase;
 }
 
-let post: RateLimitRequestHandler | undefined
+let post: RateLimitRequestHandler | undefined;
 export function rateLimitPost() {
 	post ??= rateLimit({
 		windowMs: 15 * 60 * 1000,
