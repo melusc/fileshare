@@ -903,6 +903,7 @@ __metadata:
     esbuild: "npm:^0.24.0"
     eslint: "npm:^9.14.0"
     express: "npm:^4.21.1"
+    express-rate-limit: "npm:^7.4.1"
     file-type: "npm:^19.6.0"
     frontend: "workspace:^"
     helmet: "npm:^8.0.0"
@@ -1932,6 +1933,15 @@ __metadata:
   version: 3.1.1
   resolution: "exponential-backoff@npm:3.1.1"
   checksum: 10c0/160456d2d647e6019640bd07111634d8c353038d9fa40176afb7cd49b0548bdae83b56d05e907c2cce2300b81cae35d800ef92fefb9d0208e190fa3b7d6bb579
+  languageName: node
+  linkType: hard
+
+"express-rate-limit@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "express-rate-limit@npm:7.4.1"
+  peerDependencies:
+    express: 4 || 5 || ^5.0.0-beta.1
+  checksum: 10c0/111673b43e7c2eef8bc3b6d5e7b46cabe055782d446b0aa93e55ef277e1c7995366443c16fa92101948dafdf1c4f39523c03adbfcc7c57cbbb9c9131ee374049
   languageName: node
   linkType: hard
 

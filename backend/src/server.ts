@@ -14,6 +14,10 @@ import type {Upload} from 'types';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
 import {database} from './database.ts';
+import {
+	rateLimitGetDatabase,
+	rateLimitGetStatic,
+} from './middleware/rate-limit.ts';
 import {setHeaders} from './middleware/set-headers.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
@@ -72,6 +76,7 @@ app.use(async (request, response, next) => {
 
 app.use(
 	'/static',
+	rateLimitGetStatic(),
 	express.static(staticRoot, {
 		index: false,
 		redirect: false,
@@ -81,7 +86,7 @@ app.use(
 app.use('/login', loginRouter);
 app.use('/upload', uploadRouter);
 
-app.use('/logout', (_request, response) => {
+app.use('/logout', rateLimitGetDatabase(), (_request, response) => {
 	response.clearCookie('session', {
 		httpOnly: true,
 		secure: true,
@@ -103,10 +108,10 @@ Disallow: /`,
 		);
 });
 
-app.get('/:id', async (request, response, next) => {
+app.get('/:id', rateLimitGetDatabase(), async (request, response, next) => {
 	const {id} = request.params;
 	try {
-		const filePath = path.join(fileURLToPath(uploadsDirectory), id);
+		const filePath = path.join(fileURLToPath(uploadsDirectory), id!);
 
 		if (!isPathInside(filePath, fileURLToPath(uploadsDirectory))) {
 			next();
@@ -125,18 +130,23 @@ app.get('/:id', async (request, response, next) => {
 	}
 });
 
-app.get('/', jwt.guard(), async (_request, response) => {
-	const list = database
-		.prepare<
-			[],
-			Upload
-		>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
-		.all();
+app.get(
+	'/',
+	rateLimitGetDatabase(),
+	jwt.guard(),
+	async (_request, response) => {
+		const list = database
+			.prepare<
+				[],
+				Upload
+			>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
+			.all();
 
-	response.send(
-		await render('index', {session: response.locals.session, uploads: list}),
-	);
-});
+		response.send(
+			await render('index', {session: response.locals.session, uploads: list}),
+		);
+	},
+);
 
 app.use(async (_request, response) => {
 	response

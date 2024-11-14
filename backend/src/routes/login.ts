@@ -5,12 +5,13 @@ import express, {Router} from 'express';
 import {render} from 'frontend';
 
 import {database} from '../database.ts';
+import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
 import {jwt} from '../session-token.ts';
 import {scrypt} from '../util/promisified.ts';
 
 export const loginRouter: Router = Router();
 
-loginRouter.get('/', async (_request, response) => {
+loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
 		await render('login', {
 			session: response.locals.session,
@@ -21,6 +22,7 @@ loginRouter.get('/', async (_request, response) => {
 
 loginRouter.post(
 	'/',
+	rateLimitPost(),
 	express.urlencoded({extended: false}),
 	async (request, response) => {
 		const {username, password} = (request.body ?? {}) as Record<
