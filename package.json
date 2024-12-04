@@ -4,7 +4,7 @@
 		"url": "https://github.com/melusc"
 	},
 	"devDependencies": {
-		"prettier": "^3.4.1"
+		"prettier": "^3.4.2"
 	},
 	"engines": {
 		"node": ">=23.3.0"
