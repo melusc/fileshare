@@ -19,7 +19,7 @@ export function $(
 	template: readonly string[],
 	...substitutions: readonly Substitution[]
 ): SafeString {
-	const result: (string | SafeString)[] = [];
+	const result: string[] = [];
 
 	for (const [index, templateItem] of template.entries()) {
 		if (index > 0) {
