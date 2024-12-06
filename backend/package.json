@@ -7,7 +7,7 @@
 		"better-sqlite3": "^11.6.0",
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
-		"express": "^4.21.1",
+		"express": "^4.21.2",
 		"express-rate-limit": "^7.4.1",
 		"file-type": "^19.6.0",
 		"frontend": "workspace:^",
