@@ -3,7 +3,7 @@
 		"he": "^1.2.0"
 	},
 	"devDependencies": {
-		"@lusc/eslint-config": "^3.4.0",
+		"@lusc/eslint-config": "^3.4.1",
 		"@lusc/tsconfig": "^5.1.0",
 		"@types/he": "^1.2.3",
 		"@types/node": "^22.10.1",
