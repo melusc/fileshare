@@ -6,14 +6,14 @@
 		"@lusc/eslint-config": "^3.4.1",
 		"@lusc/tsconfig": "^5.1.0",
 		"@types/he": "^1.2.3",
-		"@types/node": "^22.10.1",
+		"@types/node": "^22.10.2",
 		"esbuild": "^0.24.0",
 		"eslint": "^9.16.0",
 		"types": "workspace:^",
 		"typescript": "^5.7.2"
 	},
 	"engines": {
-		"node": ">=23.3.0"
+		"node": ">=23.4.0"
 	},
 	"exports": {
 		".": "./dist/index.js",
