@@ -10,6 +10,16 @@ const EXPIRY_MINUTES = 15;
 class CSRF {
 	#tokens = new Map<string, CsrfEntry>();
 
+	constructor() {
+		// Clear every 24h
+		setInterval(
+			() => {
+				this.clearOutdatedTokens();
+			},
+			1000 * 60 * 60 * 24,
+		);
+	}
+
 	generate(user: string | false) {
 		const token = randomBytes(64).toString('base64url');
 		const expiry = new Date();
@@ -41,6 +51,14 @@ class CSRF {
 		}
 
 		return entry.expiry.getTime() > Date.now();
+	}
+
+	clearOutdatedTokens() {
+		for (const [token, {expiry}] of this.#tokens) {
+			if (expiry.getTime() <= Date.now()) {
+				this.#tokens.delete(token);
+			}
+		}
 	}
 }
 
