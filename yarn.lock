@@ -614,7 +614,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.10.3":
+"@types/node@npm:*, @types/node@npm:^22.10.5":
   version: 22.10.5
   resolution: "@types/node@npm:22.10.5"
   dependencies:
@@ -895,7 +895,7 @@ __metadata:
     "@types/jsonwebtoken": "npm:^9.0.7"
     "@types/morgan": "npm:^1.9.9"
     "@types/multer": "npm:^1.4.12"
-    "@types/node": "npm:^22.10.3"
+    "@types/node": "npm:^22.10.5"
     better-sqlite3: "npm:^11.7.0"
     concurrently: "npm:^9.1.2"
     cookie-parser: "npm:^1.4.7"
@@ -2173,7 +2173,7 @@ __metadata:
     "@lusc/eslint-config": "npm:^4.0.0"
     "@lusc/tsconfig": "npm:^5.1.0"
     "@types/he": "npm:^1.2.3"
-    "@types/node": "npm:^22.10.3"
+    "@types/node": "npm:^22.10.5"
     esbuild: "npm:^0.24.2"
     eslint: "npm:^9.17.0"
     he: "npm:^1.2.0"
