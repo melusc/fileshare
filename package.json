@@ -22,5 +22,8 @@
 		"backend/",
 		"frontend/",
 		"types/"
-	]
+	],
+	"resolutions": {
+		"@types/express-serve-static-core": "*"
+	}
 }
