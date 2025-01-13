@@ -126,7 +126,7 @@ app.get(
 			await render('index', {
 				session: response.locals.session,
 				uploads: getUploads(),
-				csrfToken: csrf.generate(response.locals.session!.user),
+				csrfToken: csrf.generate(),
 			}),
 		);
 	},

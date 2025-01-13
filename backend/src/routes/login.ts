@@ -17,7 +17,7 @@ loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('login', {
 			session: response.locals.session,
 			error: undefined,
-			csrfToken: csrf.generate(false),
+			csrfToken: csrf.generate(),
 		}),
 	);
 });
@@ -32,11 +32,11 @@ loginRouter.post(
 			unknown
 		>;
 
-		if (!csrf.validate(false, csrfToken)) {
+		if (!csrf.validate(csrfToken)) {
 			await render('login', {
 				session: response.locals.session,
 				error: 'Invalid CSRF token.',
-				csrfToken: csrf.generate(false),
+				csrfToken: csrf.generate(),
 			});
 			return;
 		}
@@ -46,7 +46,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Missing credentials.',
-					csrfToken: csrf.generate(false),
+					csrfToken: csrf.generate(),
 				}),
 			);
 			return;
@@ -64,7 +64,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
-					csrfToken: csrf.generate(false),
+					csrfToken: csrf.generate(),
 				}),
 			);
 			return;
@@ -78,7 +78,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
-					csrfToken: csrf.generate(false),
+					csrfToken: csrf.generate(),
 				}),
 			);
 			return;

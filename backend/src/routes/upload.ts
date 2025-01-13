@@ -36,7 +36,7 @@ uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('upload', {
 			session: response.locals.session,
 			error: undefined,
-			csrfToken: csrf.generate(response.locals.session!.user),
+			csrfToken: csrf.generate(),
 		}),
 	);
 	return;
@@ -50,12 +50,12 @@ uploadRouter.post(
 		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
 			.csrfToken;
 
-		if (!csrf.validate(response.locals.session!.user, csrfToken)) {
+		if (!csrf.validate(csrfToken)) {
 			response.status(400).send(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Invalid CSRF token.',
-					csrfToken: csrf.generate(response.locals.session!.user),
+					csrfToken: csrf.generate(),
 				}),
 			);
 			return;
@@ -66,7 +66,7 @@ uploadRouter.post(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Missing file.',
-					csrfToken: csrf.generate(response.locals.session!.user),
+					csrfToken: csrf.generate(),
 				}),
 			);
 			return;
@@ -115,12 +115,12 @@ uploadRouter.post(
 		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
 			.csrfToken;
 
-		if (!csrf.validate(response.locals.session!.user, csrfToken)) {
+		if (!csrf.validate(csrfToken)) {
 			response.status(400).send(
 				await render('index', {
 					session: response.locals.session,
 					uploads: getUploads(),
-					csrfToken: csrf.generate(response.locals.session!.user),
+					csrfToken: csrf.generate(),
 					error: 'Invalid CSRF token.',
 				}),
 			);
@@ -134,7 +134,7 @@ uploadRouter.post(
 				await render('index', {
 					session: response.locals.session,
 					uploads: getUploads(),
-					csrfToken: csrf.generate(response.locals.session!.user),
+					csrfToken: csrf.generate(),
 					error: 'Missing id.',
 				}),
 			);
