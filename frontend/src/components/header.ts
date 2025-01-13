@@ -12,7 +12,7 @@ export function header(session: Session | undefined) {
 		<h1>Upload</h1>
 	</a>
 
-	<a class="login" href=${session ? '/logout' : '/login'}>
+	<a class="login" href="${session ? '/logout' : '/login'}">
 		${session ? 'Log out' : 'Log in'}
 	</a>
 </header>`;
