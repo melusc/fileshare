@@ -95,19 +95,6 @@ app.use('/logout', rateLimitGetDatabase(), (_request, response) => {
 	response.redirect('/login');
 });
 
-app.get('/robots.txt', (_request, response) => {
-	response
-		.status(200)
-		.type('txt')
-		.send(
-			`User-agent: GPTBot
-Disallow: /
-
-User-agent: Google-Extended
-Disallow: /`,
-		);
-});
-
 app.get('/:id', rateLimitGetDatabase(), async (request, response, next) => {
 	const {id} = request.params;
 	try {
