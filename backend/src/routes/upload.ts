@@ -8,10 +8,9 @@ import isPathInside from 'is-path-inside';
 import multer from 'multer';
 
 import {uploadsDirectory} from '../constants.ts';
-import csrf from '../csrf.ts';
 import {database, getUploads} from '../database.ts';
 import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
-import {jwt} from '../session-token.ts';
+import {session, csrf, CsrfFormType} from '../middleware/token.ts';
 
 export const uploadRouter: Router = Router();
 const multerMiddleware = multer({
@@ -25,7 +24,7 @@ const multerMiddleware = multer({
 // Double Submit Token -> upload id
 const doubleSubmitTokens = new Map<string, string>();
 
-uploadRouter.use(jwt.guard());
+uploadRouter.use(session.guard());
 
 function randomFileId(idLength: number) {
 	const id = randomBytes(idLength).toString('base64url');
@@ -40,7 +39,7 @@ uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('upload', {
 			session: response.locals.session,
 			error: undefined,
-			csrfToken: csrf.generate(),
+			csrfToken: csrf.generate(CsrfFormType.uploadCreate),
 		}),
 	);
 	return;
@@ -51,15 +50,12 @@ uploadRouter.post(
 	rateLimitPost(),
 	multerMiddleware.single('file'),
 	async (request, response) => {
-		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
-			.csrfToken;
-
-		if (!csrf.validate(csrfToken)) {
+		if (!csrf.validate(CsrfFormType.uploadCreate, request)) {
 			response.status(400).send(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Invalid CSRF token.',
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.uploadCreate),
 				}),
 			);
 			return;
@@ -70,7 +66,7 @@ uploadRouter.post(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Missing file.',
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.uploadCreate),
 				}),
 			);
 			return;
@@ -130,15 +126,12 @@ uploadRouter.post(
 	rateLimitPost(),
 	multerMiddleware.none(),
 	async (request, response) => {
-		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
-			.csrfToken;
-
-		if (!csrf.validate(csrfToken)) {
+		if (!csrf.validate(CsrfFormType.uploadDelete, request)) {
 			response.status(400).send(
 				await render('index', {
 					session: response.locals.session,
 					uploads: getUploads(),
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.uploadDelete),
 					error: 'Invalid CSRF token.',
 				}),
 			);
@@ -152,7 +145,7 @@ uploadRouter.post(
 				await render('index', {
 					session: response.locals.session,
 					uploads: getUploads(),
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.uploadDelete),
 					error: 'Missing id.',
 				}),
 			);

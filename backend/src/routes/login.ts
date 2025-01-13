@@ -5,10 +5,9 @@ import {Router} from 'express';
 import {render} from 'frontend';
 import multer from 'multer';
 
-import csrf from '../csrf.ts';
 import {database} from '../database.ts';
 import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
-import {jwt} from '../session-token.ts';
+import {csrf, CsrfFormType, session} from '../middleware/token.ts';
 import {scrypt} from '../util/promisified.ts';
 
 export const loginRouter: Router = Router();
@@ -22,7 +21,7 @@ loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('login', {
 			session: response.locals.session,
 			error: undefined,
-			csrfToken: csrf.generate(),
+			csrfToken: csrf.generate(CsrfFormType.login),
 		}),
 	);
 });
@@ -32,17 +31,19 @@ loginRouter.post(
 	rateLimitPost(),
 	multerMiddleware.none(),
 	async (request, response) => {
-		const {username, password, csrfToken} = (request.body ?? {}) as Record<
+		const {username, password} = (request.body ?? {}) as Record<
 			string,
 			unknown
 		>;
 
-		if (!csrf.validate(csrfToken)) {
-			await render('login', {
-				session: response.locals.session,
-				error: 'Invalid CSRF token.',
-				csrfToken: csrf.generate(),
-			});
+		if (!csrf.validate(CsrfFormType.login, request)) {
+			response.status(400).send(
+				await render('login', {
+					session: response.locals.session,
+					error: 'Invalid CSRF token.',
+					csrfToken: csrf.generate(CsrfFormType.login),
+				}),
+			);
 			return;
 		}
 
@@ -51,7 +52,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Missing credentials.',
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.login),
 				}),
 			);
 			return;
@@ -69,7 +70,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.login),
 				}),
 			);
 			return;
@@ -83,13 +84,13 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
-					csrfToken: csrf.generate(),
+					csrfToken: csrf.generate(CsrfFormType.login),
 				}),
 			);
 			return;
 		}
 
-		jwt.setCookie(username, response);
+		session.setCookie(username, response);
 		response.redirect(302, '/');
 	},
 );

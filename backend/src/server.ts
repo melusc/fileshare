@@ -12,16 +12,15 @@ import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
-import csrf from './csrf.ts';
 import {getUploads} from './database.ts';
 import {
 	rateLimitGetDatabase,
 	rateLimitGetStatic,
 } from './middleware/rate-limit.ts';
 import {setHeaders} from './middleware/set-headers.ts';
+import {session, csrf, CsrfFormType} from './middleware/token.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
-import {jwt} from './session-token.ts';
 
 const app = express();
 
@@ -50,8 +49,7 @@ app.use(
 	}),
 );
 
-app.use(jwt.responseLocalsMiddleware());
-app.use(jwt.cookieRenewalMiddleware());
+app.use(session.middleware());
 
 app.use((request, response, next) => {
 	const segments = request.path.split('/');
@@ -120,13 +118,13 @@ app.get('/:id', rateLimitGetDatabase(), async (request, response, next) => {
 app.get(
 	'/',
 	rateLimitGetDatabase(),
-	jwt.guard(),
+	session.guard(),
 	async (_request, response) => {
 		response.send(
 			await render('index', {
 				session: response.locals.session,
 				uploads: getUploads(),
-				csrfToken: csrf.generate(),
+				csrfToken: csrf.generate(CsrfFormType.uploadDelete),
 			}),
 		);
 	},

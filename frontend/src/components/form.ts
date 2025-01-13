@@ -28,7 +28,7 @@ ${uploadError && $`<div class="error">${uploadError}</div>`}
 	`,
 	)}
 
-	<input type="hidden" name="csrfToken" value="${csrfToken}" />
+	<input type="hidden" name="csrf-token" value="${csrfToken}" />
 	<input type="submit" name="submit" class="submit" value="${submitLabel}" />
 </form>`;
 }

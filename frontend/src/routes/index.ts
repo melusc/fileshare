@@ -30,7 +30,7 @@ export const RouteIndex = {
 					<time class="upload-date" datetime="${date}">${date}</time>
 					<form action="/upload/delete" method="POST" enctype="multipart/form-data">
 						<input name="id" value="${id}" type="hidden">
-						<input name="csrfToken" value="${csrfToken}" type="hidden">
+						<input name="csrf-token" value="${csrfToken}" type="hidden">
 						<input class="upload-delete" type="submit" value="Delete">
 					</form>
 				</div>`,
