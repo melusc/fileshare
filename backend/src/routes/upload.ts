@@ -21,6 +21,10 @@ const multerMiddleware = multer({
 	},
 });
 
+// Avoid double submit
+// Double Submit Token -> upload id
+const doubleSubmitTokens = new Map<string, string>();
+
 uploadRouter.use(jwt.guard());
 
 function randomFileId(idLength: number) {
@@ -72,7 +76,18 @@ uploadRouter.post(
 			return;
 		}
 
-		const {longid} = (request.body ?? {}) as Record<string, unknown>;
+		const {longid, 'submit-token': submitToken} = (request.body ??
+			{}) as Record<string, unknown>;
+
+		// It is not that serious, no need to 400 if token isn't passed along
+		if (
+			typeof submitToken === 'string' &&
+			doubleSubmitTokens.has(submitToken)
+		) {
+			const id = doubleSubmitTokens.get(submitToken)!;
+			response.redirect(`/${id}`);
+			return;
+		}
 
 		const idLength = longid === 'on' ? 32 : 4;
 		let {id, filePath} = randomFileId(idLength);
@@ -103,6 +118,9 @@ uploadRouter.post(
 
 		await writeFile(filePath, request.file.buffer);
 
+		if (typeof submitToken === 'string') {
+			doubleSubmitTokens.set(submitToken, id);
+		}
 		response.redirect(`/${id}`);
 	},
 );

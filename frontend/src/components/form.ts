@@ -5,7 +5,8 @@ export function form(
 	inputs: ReadonlyArray<{
 		label: string;
 		name: string;
-		type: 'checkbox' | 'text' | 'file' | 'password';
+		type: 'checkbox' | 'text' | 'file' | 'password' | 'hidden';
+		value?: string;
 	}>,
 	submitLabel: string,
 	csrfToken: string,
@@ -16,9 +17,15 @@ ${uploadError && $`<div class="error">${uploadError}</div>`}
 
 <form method="POST" enctype="${enctype}">
 	${inputs.map(
-		({label, type, name}) => $`
-		<label for="${name}">${label}</label>
-		<input type="${type}" name="${name}" id="${name}" ${type !== 'checkbox' && $`required`} />
+		({label, type, name, value}) => $`
+		${type !== 'hidden' && $`<label for="${name}">${label}</label>`}
+		<input
+			type="${type}"
+			name="${name}"
+			id="${name}"
+			${typeof value === 'string' && $`value="${value}"`}
+			${type !== 'checkbox' && 'required'}
+		/>
 	`,
 	)}
 

@@ -24,6 +24,14 @@ export const RouteUpload = {
 					label: 'Use long id',
 					type: 'checkbox',
 				},
+				{
+					name: 'submit-token',
+					label: '',
+					type: 'hidden',
+					// No need for secure randomness
+					// It is just to avoid double-submit
+					value: Math.random().toString(36).slice(2),
+				},
 			],
 			'Upload',
 			csrfToken,
