@@ -110,7 +110,6 @@ uploadRouter.post(
 uploadRouter.post(
 	'/delete',
 	rateLimitPost(),
-	jwt.guard(),
 	express.urlencoded({extended: false}),
 	async (request, response) => {
 		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
