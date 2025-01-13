@@ -12,7 +12,6 @@ export const RouteUpload = {
 
 	render({error, csrfToken}: ParametersUpload) {
 		return form(
-			'multipart/form-data',
 			[
 				{
 					name: 'file',

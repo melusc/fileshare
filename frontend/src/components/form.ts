@@ -1,7 +1,6 @@
 import {$} from '../$.js';
 
 export function form(
-	enctype: 'multipart/form-data' | 'application/x-www-form-urlencoded',
 	inputs: ReadonlyArray<{
 		label: string;
 		name: string;
@@ -15,7 +14,7 @@ export function form(
 	return $`
 ${uploadError && $`<div class="error">${uploadError}</div>`}
 
-<form method="POST" enctype="${enctype}">
+<form method="POST" enctype="multipart/form-data">
 	${inputs.map(
 		({label, type, name, value}) => $`
 		${type !== 'hidden' && $`<label for="${name}">${label}</label>`}

@@ -1,8 +1,9 @@
 import type {Buffer} from 'node:buffer';
 import {timingSafeEqual} from 'node:crypto';
 
-import express, {Router} from 'express';
+import {Router} from 'express';
 import {render} from 'frontend';
+import multer from 'multer';
 
 import csrf from '../csrf.ts';
 import {database} from '../database.ts';
@@ -11,6 +12,10 @@ import {jwt} from '../session-token.ts';
 import {scrypt} from '../util/promisified.ts';
 
 export const loginRouter: Router = Router();
+
+const multerMiddleware = multer({
+	storage: multer.memoryStorage(),
+});
 
 loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
@@ -25,7 +30,7 @@ loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 loginRouter.post(
 	'/',
 	rateLimitPost(),
-	express.urlencoded({extended: false}),
+	multerMiddleware.none(),
 	async (request, response) => {
 		const {username, password, csrfToken} = (request.body ?? {}) as Record<
 			string,

@@ -12,7 +12,6 @@ export const RouteLogin = {
 
 	render({error, csrfToken}: ParametersLogin) {
 		return form(
-			'application/x-www-form-urlencoded',
 			[
 				{
 					label: 'Username',

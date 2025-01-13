@@ -2,7 +2,7 @@ import {randomBytes} from 'node:crypto';
 import {readFile, unlink, writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 
-import express, {Router} from 'express';
+import {Router} from 'express';
 import {render} from 'frontend';
 import isPathInside from 'is-path-inside';
 import multer from 'multer';
@@ -128,7 +128,7 @@ uploadRouter.post(
 uploadRouter.post(
 	'/delete',
 	rateLimitPost(),
-	express.urlencoded({extended: false}),
+	multerMiddleware.none(),
 	async (request, response) => {
 		const csrfToken = ((request.body ?? {}) as {csrfToken: string | undefined})
 			.csrfToken;

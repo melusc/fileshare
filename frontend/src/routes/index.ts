@@ -28,7 +28,7 @@ export const RouteIndex = {
 					<a class="upload-link" href="/${id}">${id}</a>
 					<div class="upload-author">${author}</div>
 					<time class="upload-date" datetime="${date}">${date}</time>
-					<form action="/upload/delete" method="POST">
+					<form action="/upload/delete" method="POST" enctype="multipart/form-data">
 						<input name="id" value="${id}" type="hidden">
 						<input name="csrfToken" value="${csrfToken}" type="hidden">
 						<input class="upload-delete" type="submit" value="Delete">
