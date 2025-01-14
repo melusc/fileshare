@@ -386,6 +386,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lusc/util@npm:^1.3.2":
+  version: 1.3.2
+  resolution: "@lusc/util@npm:1.3.2"
+  checksum: 10c0/656a01f50842ceed2def194031a6d1fdd9f8aa08f78f43a5e88eb2d223190643302d759f7341deb90f791f27fb7a14de6b826296f7396a6b7d04468087ddcd82
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -888,6 +895,7 @@ __metadata:
   dependencies:
     "@lusc/eslint-config": "npm:^4.0.0"
     "@lusc/tsconfig": "npm:^5.1.0"
+    "@lusc/util": "npm:^1.3.2"
     "@types/better-sqlite3": "npm:^7.6.12"
     "@types/cookie-parser": "npm:^1.4.8"
     "@types/cors": "npm:^2.8.17"

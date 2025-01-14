@@ -22,12 +22,12 @@ import {createInterface} from 'node:readline/promises';
 import {fileURLToPath} from 'node:url';
 import {parseArgs} from 'node:util';
 
+import {generatePassword} from '@lusc/util/generate-password';
 import Database, {type Database as TDatabase} from 'better-sqlite3';
 import type {Upload} from 'types';
 
 import {databasePath} from './constants.ts';
 import {scrypt} from './util/promisified.ts';
-import {generatePassword} from './util/pw.js';
 
 export const database: TDatabase = new Database(fileURLToPath(databasePath));
 
@@ -68,7 +68,7 @@ if (shouldCreateLogin) {
 	});
 
 	const username = await rl.question('Username: ');
-	const password = generatePassword(16);
+	const password = generatePassword({length: 16});
 
 	rl.close();
 
