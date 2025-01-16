@@ -24,6 +24,7 @@
 		"types/"
 	],
 	"resolutions": {
-		"@types/express-serve-static-core": "*"
+		"@types/express-serve-static-core": "^4",
+		"@types/express": "^4"
 	}
 }
