@@ -75,11 +75,12 @@ loginRouter.post(
 		}
 
 		const databaseResult = database
-			.prepare<
-				{username: string},
-				{userId: string; passwordHash: Buffer; passwordSalt: Buffer}
-			>('SELECT passwordHash, passwordSalt from logins where LOWER(username) = :username')
-			.get({username: username.trim()});
+			.prepare(
+				'SELECT passwordHash, passwordSalt from logins where LOWER(username) = :username',
+			)
+			.get({username: username.trim()}) as
+			| {userId: string; passwordHash: Buffer; passwordSalt: Buffer}
+			| undefined;
 
 		if (!databaseResult) {
 			response.status(400).send(

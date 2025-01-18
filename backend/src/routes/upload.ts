@@ -115,7 +115,7 @@ uploadRouter.post(
 		}
 
 		database
-			.prepare<{id: string; author: string; date: string}>(
+			.prepare(
 				`INSERT INTO uploads
 				(id, author, date)
 				values
@@ -175,11 +175,9 @@ uploadRouter.post(
 		}
 
 		try {
-			database
-				.prepare<{id: string}>('DELETE FROM uploads WHERE id = :id;')
-				.run({
-					id,
-				});
+			database.prepare('DELETE FROM uploads WHERE id = :id;').run({
+				id,
+			});
 			await unlink(new URL(id, uploadsDirectory));
 		} catch {
 			// Do nothing, file doesn't exist

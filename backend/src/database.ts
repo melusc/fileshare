@@ -14,22 +14,21 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import type {Buffer} from 'node:buffer';
 import {randomBytes} from 'node:crypto';
 import {stdin, stdout} from 'node:process';
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
 import {createInterface} from 'node:readline/promises';
+import {DatabaseSync} from 'node:sqlite';
 import {fileURLToPath} from 'node:url';
 import {parseArgs} from 'node:util';
 
 import {generatePassword} from '@lusc/util/generate-password';
-import Database, {type Database as TDatabase} from 'better-sqlite3';
 import type {Upload} from 'types';
 
 import {databasePath} from './constants.ts';
 import {scrypt} from './util/promisified.ts';
 
-export const database: TDatabase = new Database(fileURLToPath(databasePath));
+export const database = new DatabaseSync(fileURLToPath(databasePath));
 
 const {
 	values: {'create-login': shouldCreateLogin},
@@ -42,8 +41,6 @@ const {
 		},
 	},
 });
-
-database.pragma('journal_mode = WAL');
 
 database.exec(
 	`
@@ -76,11 +73,7 @@ if (shouldCreateLogin) {
 	const passwordHash = await scrypt(password, salt, 64);
 
 	database
-		.prepare<{
-			username: string;
-			passwordHash: Buffer;
-			salt: Buffer;
-		}>(
+		.prepare(
 			`
 			INSERT INTO logins
 				(username, passwordHash, passwordSalt)
@@ -99,9 +92,6 @@ if (shouldCreateLogin) {
 
 export function getUploads() {
 	return database
-		.prepare<
-			[],
-			Upload
-		>('SELECT id, author, date FROM uploads ORDER BY date ASC;')
-		.all();
+		.prepare('SELECT id, author, date FROM uploads ORDER BY date ASC;')
+		.all() as Upload[];
 }
