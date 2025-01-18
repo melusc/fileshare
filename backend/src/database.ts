@@ -42,6 +42,8 @@ const {
 	},
 });
 
+database.exec('PRAGMA journal_mode=WAL;');
+
 database.exec(
 	`
 		CREATE TABLE IF NOT EXISTS logins (
