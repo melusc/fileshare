@@ -39,6 +39,8 @@ import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
 
 const app = express();
+app.set('trust proxy', 'loopback');
+app.set('x-powered-by', false);
 
 app.use(cookieParser());
 app.use(
