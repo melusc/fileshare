@@ -18,6 +18,8 @@ import {randomBytes} from 'node:crypto';
 
 import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
+// eslint-disable-next-line n/no-extraneous-import
+import type {StringValue} from 'ms';
 
 class Token<T extends Record<string, unknown>> {
 	// Separate secret per type
@@ -28,7 +30,7 @@ class Token<T extends Record<string, unknown>> {
 
 	constructor(
 		private readonly audience: string,
-		private readonly expiry: string,
+		private readonly expiry: StringValue,
 	) {}
 
 	protected sign(json: T) {
