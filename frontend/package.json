@@ -4,7 +4,7 @@
 	},
 	"devDependencies": {
 		"@lusc/eslint-config": "^4.1.0",
-		"@lusc/tsconfig": "^5.1.0",
+		"@lusc/tsconfig": "^6.0.2",
 		"@types/he": "^1.2.3",
 		"@types/node": "^22.13.1",
 		"esbuild": "^0.25.0",
