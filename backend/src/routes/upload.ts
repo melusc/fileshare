@@ -107,6 +107,7 @@ uploadRouter.post(
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		while (true) {
 			try {
+				// eslint-disable-next-line security/detect-non-literal-fs-filename
 				await readFile(filePath);
 				({id, filePath} = randomFileId(idLength));
 			} catch {
@@ -128,6 +129,7 @@ uploadRouter.post(
 				date: new Date().toISOString(),
 			});
 
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		await writeFile(filePath, request.file.buffer);
 
 		if (typeof submitToken === 'string') {
@@ -178,6 +180,7 @@ uploadRouter.post(
 			database.prepare('DELETE FROM uploads WHERE id = :id;').run({
 				id,
 			});
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await unlink(new URL(id, uploadsDirectory));
 		} catch {
 			// Do nothing, file doesn't exist

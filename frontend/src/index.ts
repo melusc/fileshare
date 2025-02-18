@@ -36,6 +36,7 @@ export async function render<View extends keyof Arguments>(
 	view: View,
 	variables: Arguments[View] & {session: Session | undefined},
 ) {
+	// eslint-disable-next-line security/detect-non-literal-fs-filename
 	let template = await readFile(
 		new URL('../src/app.html', import.meta.url),
 		'utf8',
