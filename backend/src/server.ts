@@ -121,6 +121,7 @@ app.get('/:id', rateLimitGetDatabase(), async (request, response, next) => {
 			return;
 		}
 
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const file = await readFile(filePath);
 		const fileType = await fileTypeFromBuffer(file);
 		response.setHeader('Content-Disposition', 'inline');
