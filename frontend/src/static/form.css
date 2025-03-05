@@ -3,9 +3,10 @@ form {
 	width: max-content;
 	align-items: center;
 	row-gap: 5px;
+	column-gap: 1em;
 
 	grid-template-rows: 1fr 1fr 1fr;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: auto auto;
 }
 
 input {
