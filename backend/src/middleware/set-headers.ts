@@ -17,8 +17,10 @@
 import type {RequestHandler} from 'express';
 
 export function setHeaders(headers: Record<string, string>): RequestHandler {
+	const headerEntries = Object.entries(headers);
+
 	return (_request, response, next) => {
-		for (const [key, value] of Object.entries(headers)) {
+		for (const [key, value] of headerEntries) {
 			response.setHeader(key, value);
 		}
 
