@@ -87,7 +87,7 @@ jobs:
             yarn config set nodeLinker node-modules
             yarn workspaces focus --all --production
             cd ..
-            pm2 restart fileshare > /dev/null || pm2 start fileshare.config.js > /dev/null
+            pm2 start fileshare.config.js > /dev/null
           EOF
       - run: rm ~/.ssh/ssh-key
         if: always()
