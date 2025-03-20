@@ -15,18 +15,17 @@
 */
 
 import {randomBytes} from 'node:crypto';
+import {env} from 'node:process';
 
 import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
 // eslint-disable-next-line n/no-extraneous-import
 import type {StringValue} from 'ms';
 
+const tokenSecret = env['TOKEN_SECRET'];
+
 class Token<T extends Record<string, unknown>> {
-	// Separate secret per type
-	// Implicitly prevents csrf tokens
-	// being passed as session token
-	// (in addition to audience)
-	#secret = randomBytes(128);
+	#secret = tokenSecret ?? randomBytes(128);
 
 	constructor(
 		private readonly audience: string,
