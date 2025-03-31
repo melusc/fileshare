@@ -22,9 +22,5 @@
 		"backend/",
 		"frontend/",
 		"types/"
-	],
-	"resolutions": {
-		"@types/express-serve-static-core": "^4.19.6",
-		"@types/express": "^4.17.21"
-	}
+	]
 }
