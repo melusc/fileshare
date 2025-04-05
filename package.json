@@ -7,10 +7,10 @@
 		"prettier": "^3.5.3"
 	},
 	"engines": {
-		"node": ">=23.10.0"
+		"node": ">=23.11.0"
 	},
 	"name": "@lusc/fileshare",
-	"packageManager": "yarn@4.7.0",
+	"packageManager": "yarn@4.8.1",
 	"private": true,
 	"scripts": {
 		"build": "yarn workspaces foreach -Aivt run build",
