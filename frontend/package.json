@@ -3,12 +3,12 @@
 		"he": "^1.2.0"
 	},
 	"devDependencies": {
-		"@lusc/eslint-config": "^7.1.0",
+		"@lusc/eslint-config": "^7.2.0",
 		"@lusc/tsconfig": "^6.0.2",
 		"@types/he": "^1.2.3",
-		"@types/node": "^22.14.0",
-		"esbuild": "^0.25.2",
-		"eslint": "^9.24.0",
+		"@types/node": "^22.15.2",
+		"esbuild": "^0.25.3",
+		"eslint": "^9.25.1",
 		"types": "workspace:^",
 		"typescript": "^5.8.3"
 	},

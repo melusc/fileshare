@@ -10,7 +10,7 @@
 		"node": ">=23.11.0"
 	},
 	"name": "@lusc/fileshare",
-	"packageManager": "yarn@4.8.1",
+	"packageManager": "yarn@4.9.1",
 	"private": true,
 	"scripts": {
 		"build": "yarn workspaces foreach -Aivt run build",
