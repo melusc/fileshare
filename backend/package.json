@@ -9,7 +9,7 @@
 		"cors": "^2.8.5",
 		"express": "^5.1.0",
 		"express-rate-limit": "^7.5.0",
-		"file-type": "^20.4.1",
+		"file-type": "^20.5.0",
 		"frontend": "workspace:^",
 		"helmet": "^8.1.0",
 		"ip": "^2.0.1",
@@ -17,10 +17,10 @@
 		"jsonwebtoken": "^9.0.2",
 		"morgan": "^1.10.0",
 		"multer": "^1.4.5-lts.2",
-		"zod": "^3.24.2"
+		"zod": "^3.24.3"
 	},
 	"devDependencies": {
-		"@lusc/eslint-config": "^7.1.0",
+		"@lusc/eslint-config": "^7.2.0",
 		"@lusc/tsconfig": "^6.0.2",
 		"@types/cookie-parser": "^1.4.8",
 		"@types/cors": "^2.8.17",
@@ -29,10 +29,10 @@
 		"@types/morgan": "^1.9.9",
 		"@types/ms": "^2.1.0",
 		"@types/multer": "^1.4.12",
-		"@types/node": "^22.14.0",
+		"@types/node": "^22.15.2",
 		"concurrently": "^9.1.2",
-		"esbuild": "^0.25.2",
-		"eslint": "^9.24.0",
+		"esbuild": "^0.25.3",
+		"eslint": "^9.25.1",
 		"types": "workspace:^",
 		"typescript": "^5.8.3"
 	},
