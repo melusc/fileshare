@@ -62,25 +62,8 @@ app.use(morgan('dev'));
 
 app.use(session.middleware());
 
-app.use((request, response, next) => {
-	const segments = request.path.split('/');
-	if (segments.includes('..')) {
-		response.status(418).type('txt').send('..');
-		return;
-	}
-
+app.use((_request, response, next) => {
 	response.setHeader('Permissions-Policy', 'interest-cohort=()');
-
-	next();
-});
-
-app.use(async (request, response, next) => {
-	if (request.path.includes('\\')) {
-		response
-			.status(404)
-			.send(await render('404', {session: response.locals.session}));
-		return;
-	}
 
 	next();
 });
