@@ -33,7 +33,6 @@ import {
 	rateLimitGetDatabase,
 	rateLimitGetStatic,
 } from './middleware/rate-limit.ts';
-import {setHeaders} from './middleware/set-headers.ts';
 import {session, csrf, CsrfFormType} from './middleware/token.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
@@ -61,12 +60,6 @@ app.use(
 app.use(cors());
 app.use(morgan('dev'));
 
-app.use(
-	setHeaders({
-		'permissions-policy': 'interest-cohort=()',
-	}),
-);
-
 app.use(session.middleware());
 
 app.use((request, response, next) => {
@@ -75,6 +68,8 @@ app.use((request, response, next) => {
 		response.status(418).type('txt').send('..');
 		return;
 	}
+
+	response.setHeader('Permissions-Policy', 'interest-cohort=()');
 
 	next();
 });
