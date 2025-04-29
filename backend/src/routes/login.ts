@@ -23,7 +23,7 @@ import multer from 'multer';
 
 import {database} from '../database.ts';
 import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
-import {csrf, CsrfFormType, session} from '../middleware/token.ts';
+import {csrf, session} from '../middleware/token.ts';
 import {scrypt} from '../util/promisified.ts';
 
 export const loginRouter: Router = Router();
@@ -37,7 +37,7 @@ loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('login', {
 			session: response.locals.session,
 			error: undefined,
-			csrfToken: csrf.generate(CsrfFormType.login),
+			csrfToken: csrf.generate(response),
 		}),
 	);
 });
@@ -52,12 +52,12 @@ loginRouter.post(
 			unknown
 		>;
 
-		if (!csrf.validate(CsrfFormType.login, request)) {
+		if (!csrf.validate(request, response)) {
 			response.status(400).send(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid CSRF token.',
-					csrfToken: csrf.generate(CsrfFormType.login),
+					csrfToken: csrf.generate(response),
 				}),
 			);
 			return;
@@ -68,7 +68,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Missing credentials.',
-					csrfToken: csrf.generate(CsrfFormType.login),
+					csrfToken: csrf.generate(response),
 				}),
 			);
 			return;
@@ -87,7 +87,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
-					csrfToken: csrf.generate(CsrfFormType.login),
+					csrfToken: csrf.generate(response),
 				}),
 			);
 			return;
@@ -101,7 +101,7 @@ loginRouter.post(
 				await render('login', {
 					session: response.locals.session,
 					error: 'Invalid credentials.',
-					csrfToken: csrf.generate(CsrfFormType.login),
+					csrfToken: csrf.generate(response),
 				}),
 			);
 			return;

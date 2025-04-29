@@ -26,7 +26,7 @@ import multer from 'multer';
 import {uploadsDirectory} from '../constants.ts';
 import {database, getUploads} from '../database.ts';
 import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
-import {session, csrf, CsrfFormType} from '../middleware/token.ts';
+import {session, csrf} from '../middleware/token.ts';
 
 export const uploadRouter: Router = Router();
 const multerMiddleware = multer({
@@ -55,7 +55,7 @@ uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 		await render('upload', {
 			session: response.locals.session,
 			error: undefined,
-			csrfToken: csrf.generate(CsrfFormType.uploadCreate),
+			csrfToken: csrf.generate(response),
 		}),
 	);
 	return;
@@ -66,12 +66,12 @@ uploadRouter.post(
 	rateLimitPost(),
 	multerMiddleware.single('file'),
 	async (request, response) => {
-		if (!csrf.validate(CsrfFormType.uploadCreate, request)) {
+		if (!csrf.validate(request, response)) {
 			response.status(400).send(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Invalid CSRF token.',
-					csrfToken: csrf.generate(CsrfFormType.uploadCreate),
+					csrfToken: csrf.generate(response),
 				}),
 			);
 			return;
@@ -82,7 +82,7 @@ uploadRouter.post(
 				await render('upload', {
 					session: response.locals.session,
 					error: 'Missing file.',
-					csrfToken: csrf.generate(CsrfFormType.uploadCreate),
+					csrfToken: csrf.generate(response),
 				}),
 			);
 			return;
@@ -144,12 +144,12 @@ uploadRouter.post(
 	rateLimitPost(),
 	multerMiddleware.none(),
 	async (request, response) => {
-		if (!csrf.validate(CsrfFormType.uploadDelete, request)) {
+		if (!csrf.validate(request, response)) {
 			response.status(400).send(
 				await render('index', {
 					session: response.locals.session,
 					uploads: getUploads(),
-					csrfToken: csrf.generate(CsrfFormType.uploadDelete),
+					csrfToken: csrf.generate(response),
 					error: 'Invalid CSRF token.',
 				}),
 			);
@@ -163,7 +163,7 @@ uploadRouter.post(
 				await render('index', {
 					session: response.locals.session,
 					uploads: getUploads(),
-					csrfToken: csrf.generate(CsrfFormType.uploadDelete),
+					csrfToken: csrf.generate(response),
 					error: 'Missing id.',
 				}),
 			);

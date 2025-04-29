@@ -126,26 +126,21 @@ class Session extends Token<{user: string}> {
 
 export const session = new Session();
 
-export const enum CsrfFormType {
-	uploadDelete,
-	uploadCreate,
-	login,
-}
-class Csrf extends Token<{form: CsrfFormType}> {
+class Csrf extends Token<{user: string | undefined}> {
 	constructor() {
 		super('fileshare/csrf', '15 min');
 	}
 
-	generate(form: CsrfFormType) {
-		return this.sign({form});
+	generate(response: Response) {
+		return this.sign({user: response.locals.session?.user});
 	}
 
-	validate(form: CsrfFormType, request: Request): boolean {
+	validate(request: Request, response: Response): boolean {
 		const body = (request.body ?? {}) as Record<string, string>;
 		const token = body['csrf-token'];
 
 		const jwtPayload = this.verify(token);
-		return jwtPayload && jwtPayload.form === form;
+		return jwtPayload && jwtPayload.user === response.locals.session?.user;
 	}
 }
 

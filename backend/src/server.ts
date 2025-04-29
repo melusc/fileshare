@@ -33,7 +33,7 @@ import {
 	rateLimitGetDatabase,
 	rateLimitGetStatic,
 } from './middleware/rate-limit.ts';
-import {session, csrf, CsrfFormType} from './middleware/token.ts';
+import {session, csrf} from './middleware/token.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
 
@@ -121,7 +121,7 @@ app.get(
 			await render('index', {
 				session: response.locals.session,
 				uploads: getUploads(),
-				csrfToken: csrf.generate(CsrfFormType.uploadDelete),
+				csrfToken: csrf.generate(response),
 			}),
 		);
 	},
