@@ -2430,7 +2430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jwa@npm:^1.4.1":
+"jwa@npm:1.4.1":
   version: 1.4.1
   resolution: "jwa@npm:1.4.1"
   dependencies:
@@ -2438,6 +2438,17 @@ __metadata:
     ecdsa-sig-formatter: "npm:1.0.11"
     safe-buffer: "npm:^5.0.1"
   checksum: 10c0/5c533540bf38702e73cf14765805a94027c66a0aa8b16bc3e89d8d905e61a4ce2791e87e21be97d1293a5ee9d4f3e5e47737e671768265ca4f25706db551d5e9
+  languageName: node
+  linkType: hard
+
+"jwa@patch:jwa@npm%3A1.4.1#~/.yarn/patches/jwa-npm-1.4.1-4f19d6572c.patch":
+  version: 1.4.1
+  resolution: "jwa@patch:jwa@npm%3A1.4.1#~/.yarn/patches/jwa-npm-1.4.1-4f19d6572c.patch::version=1.4.1&hash=ea85c5"
+  dependencies:
+    buffer-equal-constant-time: "npm:1.0.1"
+    ecdsa-sig-formatter: "npm:1.0.11"
+    safe-buffer: "npm:^5.0.1"
+  checksum: 10c0/951e224f8e8619165df0430f4fb22c761a40c0025a45b59faf1cbeb178899e7b53bee82829ad109dc41b6abc02f26809cb8d6e1d284c9e48c5ae9aa5cc1c85b9
   languageName: node
   linkType: hard
 
