@@ -51,8 +51,8 @@
 		"dev": "concurrently 'yarn:start:w' 'yarn:build:w'",
 		"esbuild": "esbuild --outdir=dist --format=esm --platform=node --bundle --sourcemap --packages=external src/server.ts",
 		"fmt": "eslint --fix",
-		"start": "node --env-file=.env dist/server.js",
-		"start:w": "node --env-file=.env --watch dist/server.js"
+		"start": "node --env-file-if-exists .env dist/server.js",
+		"start:w": "node --env-file-if-exists .env --watch dist/server.js"
 	},
 	"type": "module"
 }
