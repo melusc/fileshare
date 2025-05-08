@@ -43,11 +43,12 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: build
+          include-hidden-files: true
           path: |
             .
-            !./node_modules
-            !./.github
-            !./.yarn
+            !.yarn/install-state.gz
+            !node_modules
+            !.git
 
   upload:
     runs-on: ubuntu-latest
@@ -76,8 +77,12 @@ jobs:
           "
 
           # rsync all relevant files
-          rsync -vhaR --checksum --delete -e "ssh -i ~/.ssh/ssh-key" {backend,frontend}/{dist/,package.json} package.json "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}:/var/www/fileshare/"
-          rsync -vhaR --checksum --delete -e "ssh -i ~/.ssh/ssh-key" frontend/src/static/ frontend/src/app.html "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}:/var/www/fileshare/"
+          rsync -vhaR --checksum --delete \
+            -e "ssh -i ~/.ssh/ssh-key" \
+            {backend,frontend}/{dist/,package.json} \
+            package.json .yarn/patches \
+            frontend/src/static/ frontend/src/app.html \
+            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}:/var/www/fileshare/"
 
           ssh -i ~/.ssh/ssh-key "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}" /bin/bash << 'EOF'
             export NVM_DIR="$HOME/.nvm"
