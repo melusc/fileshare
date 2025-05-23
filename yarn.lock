@@ -389,10 +389,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lusc/util@npm:^1.4.3":
-  version: 1.4.3
-  resolution: "@lusc/util@npm:1.4.3"
-  checksum: 10c0/49614013740f8fe25c6458af0faa9974edb3319a7c00304412eac7bac9ebd80b8340dadd95429b4d69d93efc15dffc5043d7c8e88b6802dc94f23b2124d5c103
+"@lusc/util@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@lusc/util@npm:2.0.0"
+  checksum: 10c0/aec6430116ad442f79e2085a69d9ae4677a4071d167cad39aa73fad73d0a9220dd38c41c58b0c9146e083472ae0aba0e8a9bd5c683e0edd7cb46b920988da899
   languageName: node
   linkType: hard
 
@@ -452,7 +452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tokenizer/inflate@npm:^0.2.6":
+"@tokenizer/inflate@npm:^0.2.7":
   version: 0.2.7
   resolution: "@tokenizer/inflate@npm:0.2.7"
   dependencies:
@@ -962,7 +962,7 @@ __metadata:
   dependencies:
     "@lusc/eslint-config": "npm:^7.2.0"
     "@lusc/tsconfig": "npm:^7.0.0"
-    "@lusc/util": "npm:^1.4.3"
+    "@lusc/util": "npm:^2.0.0"
     "@types/cookie-parser": "npm:^1.4.8"
     "@types/cors": "npm:^2.8.18"
     "@types/express": "npm:^5.0.1"
@@ -978,7 +978,7 @@ __metadata:
     eslint: "npm:^9.26.0"
     express: "npm:^5.1.0"
     express-rate-limit: "npm:^7.5.0"
-    file-type: "npm:^20.5.0"
+    file-type: "npm:^21.0.0"
     frontend: "workspace:^"
     helmet: "npm:^8.1.0"
     ip: "npm:^2.0.1"
@@ -1976,15 +1976,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-type@npm:^20.5.0":
-  version: 20.5.0
-  resolution: "file-type@npm:20.5.0"
+"file-type@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "file-type@npm:21.0.0"
   dependencies:
-    "@tokenizer/inflate": "npm:^0.2.6"
-    strtok3: "npm:^10.2.0"
+    "@tokenizer/inflate": "npm:^0.2.7"
+    strtok3: "npm:^10.2.2"
     token-types: "npm:^6.0.0"
     uint8array-extras: "npm:^1.4.0"
-  checksum: 10c0/9b13d7e4eca79752008f036712a42df78393f05b88b9013c5754b04d3eb90b051cb692836a04acf7d2c696cb9f28077ddf8ebd6830175807f14fddf837d63be3
+  checksum: 10c0/ee6b0bb5771ad154e236bb77b5c00907743fef3637c3825713c1d6913377d3d969ebba4a6f0aa854b8231552e2c1bd0387229fe67394dc3d08a01819c7d107b1
   languageName: node
   linkType: hard
 
@@ -3395,7 +3395,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strtok3@npm:^10.2.0":
+"strtok3@npm:^10.2.2":
   version: 10.2.2
   resolution: "strtok3@npm:10.2.2"
   dependencies:
