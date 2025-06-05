@@ -47,7 +47,7 @@ app.use(
 	helmet({
 		contentSecurityPolicy: {
 			directives: {
-				'script-src': ["'self'", "'unsafe-inline'"],
+				'style-src': ["'self'", 'https://fonts.googleapis.com'],
 			},
 		},
 
