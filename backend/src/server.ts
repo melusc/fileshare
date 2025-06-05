@@ -29,6 +29,7 @@ import morgan from 'morgan';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
 import {getUploads} from './database.ts';
+import env from './env.ts';
 import {
 	rateLimitGetDatabase,
 	rateLimitGetStatic,
@@ -133,6 +134,6 @@ app.use(async (_request, response) => {
 		.send(await render('404', {session: response.locals.session}));
 });
 
-app.listen(3178, '127.0.0.1', () => {
-	console.log('Listening on http://localhost:3178/');
+app.listen(env.port, '127.0.0.1', () => {
+	console.log('Listening on http://localhost:%s/', env.port);
 });

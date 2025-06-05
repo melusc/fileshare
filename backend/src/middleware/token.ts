@@ -14,18 +14,15 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {randomBytes} from 'node:crypto';
-import {env} from 'node:process';
-
 import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
 // eslint-disable-next-line n/no-extraneous-import
 import type {StringValue} from 'ms';
 
-const tokenSecret = env['TOKEN_SECRET'];
+import env from '../env.ts';
 
 class Token<T extends Record<string, unknown>> {
-	#secret = tokenSecret ?? randomBytes(128);
+	#secret = env.sessionSecret;
 
 	constructor(
 		private readonly audience: string,
