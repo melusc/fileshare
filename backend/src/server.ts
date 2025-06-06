@@ -63,12 +63,6 @@ app.use(morgan('dev'));
 
 app.use(session.middleware());
 
-app.use((_request, response, next) => {
-	response.setHeader('Permissions-Policy', 'interest-cohort=()');
-
-	next();
-});
-
 app.use(
 	'/static',
 	rateLimitGetStatic(),
