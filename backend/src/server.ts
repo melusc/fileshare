@@ -19,7 +19,6 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
 import express from 'express';
 import {fileTypeFromBuffer} from 'file-type';
 import {render} from 'frontend';
@@ -58,7 +57,6 @@ app.use(
 		xXssProtection: false,
 	}),
 );
-app.use(cors());
 app.use(morgan('dev'));
 
 app.use(session.middleware());
