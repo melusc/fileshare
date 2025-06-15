@@ -16,7 +16,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"morgan": "^1.10.0",
 		"multer": "^2.0.1",
-		"zod": "^3.25.62"
+		"zod": "^3.25.64"
 	},
 	"devDependencies": {
 		"@lusc/eslint-config": "^7.3.0",
@@ -30,7 +30,7 @@
 		"@types/node": "^22.15.31",
 		"concurrently": "^9.1.2",
 		"esbuild": "^0.25.5",
-		"eslint": "^9.28.0",
+		"eslint": "^9.29.0",
 		"types": "workspace:^",
 		"typescript": "^5.8.3"
 	},
