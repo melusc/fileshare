@@ -6,9 +6,9 @@
 		"@lusc/eslint-config": "^7.3.0",
 		"@lusc/tsconfig": "^7.0.0",
 		"@types/he": "^1.2.3",
-		"@types/node": "^22.15.31",
+		"@types/node": "^22.15.32",
 		"esbuild": "^0.25.5",
-		"eslint": "^9.28.0",
+		"eslint": "^9.29.0",
 		"types": "workspace:^",
 		"typescript": "^5.8.3"
 	},
