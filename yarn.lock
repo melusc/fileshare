@@ -1000,12 +1000,12 @@ __metadata:
     "@types/ms": "npm:^2.1.0"
     "@types/multer": "npm:^1.4.13"
     "@types/node": "npm:^22.15.32"
-    concurrently: "npm:^9.1.2"
+    concurrently: "npm:^9.2.0"
     cookie-parser: "npm:^1.4.7"
     esbuild: "npm:^0.25.5"
     eslint: "npm:^9.29.0"
     express: "npm:^5.1.0"
-    express-rate-limit: "npm:^7.5.0"
+    express-rate-limit: "npm:^7.5.1"
     file-type: "npm:^21.0.0"
     frontend: "workspace:^"
     helmet: "npm:^8.1.0"
@@ -1016,7 +1016,7 @@ __metadata:
     multer: "npm:^2.0.1"
     types: "workspace:^"
     typescript: "npm:^5.8.3"
-    zod: "npm:^3.25.64"
+    zod: "npm:^3.25.67"
   languageName: unknown
   linkType: soft
 
@@ -1245,9 +1245,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:^9.1.2":
-  version: 9.1.2
-  resolution: "concurrently@npm:9.1.2"
+"concurrently@npm:^9.2.0":
+  version: 9.2.0
+  resolution: "concurrently@npm:9.2.0"
   dependencies:
     chalk: "npm:^4.1.2"
     lodash: "npm:^4.17.21"
@@ -1259,7 +1259,7 @@ __metadata:
   bin:
     conc: dist/bin/concurrently.js
     concurrently: dist/bin/concurrently.js
-  checksum: 10c0/88e00269366aa885ca2b97fd53b04e7af2b0f31774d991bfc0e88c0de61cdebdf115ddacc9c897fbd1f1b90369014637fa77045a171d072a75693332b36dcc70
+  checksum: 10c0/adbb5c42d9b36d345654187003c73e2e97e600b038729eec8f8fe735e01d543097b44990f0655fba8266753f4a0bef45fec69850a2c66d119dc1eddeb427858c
   languageName: node
   linkType: hard
 
@@ -1857,12 +1857,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:^7.5.0":
-  version: 7.5.0
-  resolution: "express-rate-limit@npm:7.5.0"
+"express-rate-limit@npm:^7.5.1":
+  version: 7.5.1
+  resolution: "express-rate-limit@npm:7.5.1"
   peerDependencies:
-    express: ^4.11 || 5 || ^5.0.0-beta.1
-  checksum: 10c0/3e96afa05b4f577395688ede37e0cb19901f20c350b32575fb076f3d25176209fb88d3648151755c232aaf304147c58531f070757978f376e2f08326449299fd
+    express: ">= 4.11"
+  checksum: 10c0/b07de84d700a2c07c4bf2f040e7558ed5a1f660f03ed5f30bf8ff7b51e98ba7a85215640e70fc48cbbb9151066ea51239d9a1b41febc9b84d98c7915b0186161
   languageName: node
   linkType: hard
 
@@ -3708,9 +3708,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.25.64":
-  version: 3.25.64
-  resolution: "zod@npm:3.25.64"
-  checksum: 10c0/00d76093a999e377e4ffd037fa7185e861c35917e8c4272f514115c206a0654995168f57fb71708b11e0a9243206d988b7f63b543404e1796402e50d346a6bd7
+"zod@npm:^3.25.67":
+  version: 3.25.67
+  resolution: "zod@npm:3.25.67"
+  checksum: 10c0/80a0cab3033272c4ab9312198081f0c4ea88e9673c059aa36dc32024906363729db54bdb78f3dc9d5529bd1601f74974d5a56c0a23e40c6f04a9270c9ff22336
   languageName: node
   linkType: hard
