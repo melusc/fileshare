@@ -4,10 +4,10 @@
 		"url": "https://github.com/melusc"
 	},
 	"devDependencies": {
-		"prettier": "^3.5.3"
+		"prettier": "^3.6.2"
 	},
 	"engines": {
-		"node": ">=24.2.0"
+		"node": ">=24.3.0"
 	},
 	"name": "@lusc/fileshare",
 	"packageManager": "yarn@4.9.2",
