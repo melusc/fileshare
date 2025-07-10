@@ -16,7 +16,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"morgan": "^1.10.0",
 		"multer": "^2.0.1",
-		"zod": "^3.25.76"
+		"zod": "^4.0.2"
 	},
 	"devDependencies": {
 		"@lusc/eslint-config": "^7.4.0",
