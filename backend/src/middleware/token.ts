@@ -117,6 +117,7 @@ class Session extends Token<{user: string}> {
 			httpOnly: true,
 			secure: true,
 			expires,
+			sameSite: 'lax',
 		});
 	}
 }
