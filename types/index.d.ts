@@ -18,6 +18,8 @@ export type Upload = {
 	readonly id: string;
 	readonly author: string;
 	readonly date: string;
+	readonly mime: string | null;
+	readonly filename: string | null;
 };
 
 export type Session = {

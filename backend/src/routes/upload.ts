@@ -16,9 +16,11 @@
 
 import {randomBytes} from 'node:crypto';
 import {readFile, unlink, writeFile} from 'node:fs/promises';
+import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import {Router} from 'express';
+import {fileTypeFromBuffer} from 'file-type';
 import {render} from 'frontend';
 import isPathInside from 'is-path-inside';
 import multer from 'multer';
@@ -115,18 +117,25 @@ uploadRouter.post(
 			}
 		}
 
+		const mime = await fileTypeFromBuffer(request.file.buffer);
+		let filename = request.file.originalname.trim();
+		filename &&= path.basename(filename);
+
 		database
 			.prepare(
 				`INSERT INTO uploads
-				(id, author, date)
+				(id, author, date, mime, filename)
 				values
-				(:id, :author, :date);
+				(:id, :author, :date, :mime, :filename);
 			`,
 			)
 			.run({
 				id,
 				author: response.locals.session!.user,
 				date: new Date().toISOString(),
+				mime: mime?.mime ?? null,
+				// Turn empty string into null
+				filename: filename || null,
 			});
 
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -181,7 +190,7 @@ uploadRouter.post(
 				id,
 			});
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			await unlink(new URL(id, uploadsDirectory));
+			await unlink(uploadPath);
 		} catch {
 			// Do nothing, file doesn't exist
 		}

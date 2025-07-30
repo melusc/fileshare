@@ -58,6 +58,8 @@ database.exec(
 			id TEXT PRIMARY KEY,
 			date TEXT NOT NULL,
 			author TEXT NOT NULL,
+			mime TEXT,
+			filename TEXT,
 			FOREIGN KEY(author) REFERENCES logins(username)
 		);
 	`,
@@ -97,6 +99,8 @@ if (shouldCreateLogin) {
 
 export function getUploads() {
 	return database
-		.prepare('SELECT id, author, date FROM uploads ORDER BY date ASC;')
+		.prepare(
+			'SELECT id, author, date, mime, filename FROM uploads ORDER BY date ASC;',
+		)
 		.all() as Upload[];
 }

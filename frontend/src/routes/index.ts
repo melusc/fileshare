@@ -39,9 +39,10 @@ export const RouteIndex = {
 		}
 
 		const tableBody = uploads.map(
-			({id, author, date}) => $`
+			({id, author, date, mime}) => $`
 				<div class="upload-entry">
 					<a class="upload-link" href="/${id}">${id}</a>
+					<div class="upload-mime">${mime ?? ''}</div>
 					<div class="upload-author">${author}</div>
 					<time class="upload-date" datetime="${date}">${date}</time>
 					<form action="/upload/delete" method="POST" enctype="multipart/form-data">
@@ -57,6 +58,7 @@ export const RouteIndex = {
 				${error && $`<div class="error">${error}</div>`}
 				<div class="uploads-title">
 					<div>ID</div>
+					<div>Type</div>
 					<div>Author</div>
 					<div>Date</div>
 					<div>Delete Upload</div>

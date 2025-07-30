@@ -14,20 +14,16 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {readFile} from 'node:fs/promises';
-import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import {fileTypeFromBuffer} from 'file-type';
 import {render} from 'frontend';
 import helmet from 'helmet';
-import isPathInside from 'is-path-inside';
 import morgan from 'morgan';
 
 import {staticRoot, uploadsDirectory} from './constants.ts';
-import {getUploads} from './database.ts';
+import {database, getUploads} from './database.ts';
 import env from './env.ts';
 import {
 	rateLimitGetDatabase,
@@ -80,24 +76,37 @@ app.use('/logout', rateLimitGetDatabase(), (_request, response) => {
 	response.redirect('/login');
 });
 
-app.get('/:id', rateLimitGetDatabase(), async (request, response, next) => {
-	const {id} = request.params;
+app.get('/:id', rateLimitGetDatabase(), (request, response, next) => {
+	const id = request.params['id']!;
 	try {
-		const filePath = path.join(fileURLToPath(uploadsDirectory), id!);
+		const row = database
+			.prepare('SELECT mime, filename FROM uploads WHERE id = :id')
+			.get({
+				id,
+			}) as
+			| {
+					mime: string | null;
+					filename: string | null;
+			  }
+			| undefined;
 
-		if (!isPathInside(filePath, fileURLToPath(uploadsDirectory))) {
-			next();
-			return;
+		if (row?.mime) {
+			response.setHeader('Content-Type', row.mime);
+		}
+		if (row?.filename) {
+			const encoded = encodeURIComponent(row.filename);
+			response.setHeader(
+				'Content-Disposition',
+				`inline; filename*=UTF-8''${encoded}`,
+			);
+		} else {
+			response.setHeader('Content-Disposition', 'inline');
 		}
 
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
-		const file = await readFile(filePath);
-		const fileType = await fileTypeFromBuffer(file);
-		response.setHeader('Content-Disposition', 'inline');
-		if (fileType) {
-			response.setHeader('Content-Type', fileType.mime);
-		}
-		response.send(file);
+		response.sendFile(id, {
+			root: fileURLToPath(uploadsDirectory),
+			immutable: true,
+		});
 	} catch {
 		next();
 	}
