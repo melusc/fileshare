@@ -45,8 +45,12 @@ app.use(cookieParser());
 app.use(
 	helmet({
 		contentSecurityPolicy: {
+			useDefaults: false,
 			directives: {
-				'style-src': ["'self'", 'https://fonts.googleapis.com'],
+				'default-src': ["'none'"],
+				'script-src': ["'self'"],
+				'style-src-elem': ["'self'", 'https://fonts.googleapis.com'],
+				'font-src': ['https://fonts.gstatic.com'],
 			},
 		},
 
