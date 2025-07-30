@@ -20,13 +20,14 @@ import type {Route} from '../route.js';
 export type ParametersUpload = {
 	readonly error: string | undefined;
 	readonly csrfToken: string;
+	readonly submitToken: string;
 };
 
 export const RouteUpload = {
 	title: 'Upload',
 	styles: ['form.css'],
 
-	render({error, csrfToken}: ParametersUpload) {
+	render({error, csrfToken, submitToken}: ParametersUpload) {
 		return form(
 			[
 				{
@@ -45,7 +46,7 @@ export const RouteUpload = {
 					type: 'hidden',
 					// No need for secure randomness
 					// It is just to avoid double-submit
-					value: Math.random().toString(36).slice(2),
+					value: submitToken,
 				},
 			],
 			'Upload',

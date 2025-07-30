@@ -52,12 +52,18 @@ function randomFileId(idLength: number) {
 	};
 }
 
+function generateSubmitToken() {
+	// Doesn't need to be cryptographically secure
+	return Math.random().toString(36).slice(2);
+}
+
 uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
 		await render('upload', {
 			session: response.locals.session,
 			error: undefined,
 			csrfToken: csrf.generate(response),
+			submitToken: generateSubmitToken(),
 		}),
 	);
 	return;
@@ -74,6 +80,7 @@ uploadRouter.post(
 					session: response.locals.session,
 					error: 'Invalid CSRF token.',
 					csrfToken: csrf.generate(response),
+					submitToken: generateSubmitToken(),
 				}),
 			);
 			return;
@@ -85,6 +92,7 @@ uploadRouter.post(
 					session: response.locals.session,
 					error: 'Missing file.',
 					csrfToken: csrf.generate(response),
+					submitToken: generateSubmitToken(),
 				}),
 			);
 			return;
