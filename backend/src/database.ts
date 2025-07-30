@@ -43,20 +43,22 @@ const {
 	},
 });
 
-database.exec('PRAGMA journal_mode=WAL;');
+database.exec('PRAGMA journal_mode=WAL');
+database.exec('PRAGMA foreign_keys=ON');
 
 database.exec(
 	`
 		CREATE TABLE IF NOT EXISTS logins (
-				username TEXT PRIMARY KEY,
-				passwordHash BLOB NOT NULL,
-				passwordSalt BLOB NOT NULL
+			username TEXT PRIMARY KEY,
+			passwordHash BLOB NOT NULL,
+			passwordSalt BLOB NOT NULL
 		);
 
 		CREATE TABLE IF NOT EXISTS uploads (
-				id TEXT PRIMARY KEY,
-				date TEXT NOT NULL,
-				author TEXT NOT NULL
+			id TEXT PRIMARY KEY,
+			date TEXT NOT NULL,
+			author TEXT NOT NULL,
+			FOREIGN KEY(author) REFERENCES logins(username)
 		);
 	`,
 );
