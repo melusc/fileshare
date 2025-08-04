@@ -17,7 +17,7 @@
 import {mkdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 
-const dataDirectory = new URL('../data/', import.meta.url);
+const dataDirectory = new URL('../../data/', import.meta.url);
 export const uploadsDirectory = new URL('uploads/', dataDirectory);
 
 // eslint-disable-next-line security/detect-non-literal-fs-filename
