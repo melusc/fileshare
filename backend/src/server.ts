@@ -14,6 +14,7 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 import cookieParser from 'cookie-parser';
@@ -22,6 +23,7 @@ import {render} from 'frontend';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
+import {cleanupBeforeExit} from './cleanup.ts';
 import {staticRoot, uploadsDirectory} from './constants.ts';
 import {database, getUploads} from './database.ts';
 import env from './env.ts';
@@ -133,6 +135,11 @@ app.use(async (_request, response) => {
 		.send(await render('404', {session: response.locals.session}));
 });
 
-app.listen(env.port, '127.0.0.1', () => {
+const server = app.listen(env.port, '127.0.0.1', () => {
 	console.log('Listening on http://localhost:%s/', env.port);
+	process.send?.('ready');
+});
+
+cleanupBeforeExit(() => {
+	server.close();
 });

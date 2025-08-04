@@ -26,6 +26,7 @@ import {parseArgs} from 'node:util';
 import {generatePassword} from '@lusc/util/generate-password';
 import type {Upload} from 'types';
 
+import {cleanupBeforeExit} from './cleanup.ts';
 import {databasePath} from './constants.ts';
 import {scrypt} from './util/promisified.ts';
 
@@ -104,3 +105,7 @@ export function getUploads() {
 		)
 		.all() as Upload[];
 }
+
+cleanupBeforeExit(() => {
+	database.close();
+});
