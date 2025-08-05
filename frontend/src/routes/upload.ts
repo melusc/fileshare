@@ -20,14 +20,13 @@ import type {Route} from '../route.js';
 export type ParametersUpload = {
 	readonly error: string | undefined;
 	readonly csrfToken: string;
-	readonly submitToken: string;
 };
 
 export const RouteUpload = {
 	title: 'Upload',
 	styles: ['form.css'],
 
-	render({error, csrfToken, submitToken}: ParametersUpload) {
+	render({error, csrfToken}: ParametersUpload) {
 		return form(
 			[
 				{
@@ -39,14 +38,6 @@ export const RouteUpload = {
 					name: 'longid',
 					label: 'Use long id',
 					type: 'checkbox',
-				},
-				{
-					name: 'submit-token',
-					label: '',
-					type: 'hidden',
-					// No need for secure randomness
-					// It is just to avoid double-submit
-					value: submitToken,
 				},
 			],
 			'Upload',

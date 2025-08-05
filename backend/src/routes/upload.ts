@@ -38,10 +38,6 @@ const multerMiddleware = multer({
 	},
 });
 
-// Avoid double submit
-// Double Submit Token -> upload id
-const doubleSubmitTokens = new Map<string, string>();
-
 uploadRouter.use(session.guard());
 
 function randomFileId(idLength: number) {
@@ -52,18 +48,12 @@ function randomFileId(idLength: number) {
 	};
 }
 
-function generateSubmitToken() {
-	// Doesn't need to be cryptographically secure
-	return Math.random().toString(36).slice(2);
-}
-
 uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
 		await render('upload', {
 			session: response.locals.session,
 			error: undefined,
 			csrfToken: csrf.generate(response),
-			submitToken: generateSubmitToken(),
 		}),
 	);
 	return;
@@ -80,7 +70,6 @@ uploadRouter.post(
 					session: response.locals.session,
 					error: 'Invalid CSRF token.',
 					csrfToken: csrf.generate(response),
-					submitToken: generateSubmitToken(),
 				}),
 			);
 			return;
@@ -92,24 +81,12 @@ uploadRouter.post(
 					session: response.locals.session,
 					error: 'Missing file.',
 					csrfToken: csrf.generate(response),
-					submitToken: generateSubmitToken(),
 				}),
 			);
 			return;
 		}
 
-		const {longid, 'submit-token': submitToken} = (request.body ??
-			{}) as Record<string, unknown>;
-
-		// It is not that serious, no need to 400 if token isn't passed along
-		if (
-			typeof submitToken === 'string' &&
-			doubleSubmitTokens.has(submitToken)
-		) {
-			const id = doubleSubmitTokens.get(submitToken)!;
-			response.redirect(`/${id}`);
-			return;
-		}
+		const {longid} = (request.body ?? {}) as Record<string, unknown>;
 
 		const idLength = longid === 'on' ? 32 : 4;
 		let {id, filePath} = randomFileId(idLength);
@@ -149,9 +126,6 @@ uploadRouter.post(
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		await writeFile(filePath, request.file.buffer);
 
-		if (typeof submitToken === 'string') {
-			doubleSubmitTokens.set(submitToken, id);
-		}
 		response.redirect(`/${id}`);
 	},
 );
