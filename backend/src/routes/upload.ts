@@ -14,6 +14,7 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import {Buffer} from 'node:buffer';
 import {randomBytes} from 'node:crypto';
 import {readFile, unlink, writeFile} from 'node:fs/promises';
 import path from 'node:path';
@@ -104,6 +105,10 @@ uploadRouter.post(
 
 		const mime = await fileTypeFromBuffer(request.file.buffer);
 		let filename = request.file.originalname.trim();
+		try {
+			// multer uses latin1 encoding
+			filename = Buffer.from(filename, 'latin1').toString('utf8');
+		} catch {}
 		filename &&= path.basename(filename);
 
 		database
