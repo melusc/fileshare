@@ -80,10 +80,10 @@ jobs:
             -e "ssh -i ~/.ssh/ssh-key" \
             {backend,frontend}/{dist/,package.json} \
             package.json \
-            frontend/src/static/ frontend/src/app.html \
-            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}:/var/www/fileshare/"
+            frontend/src/app.html \
+            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/var/www/fileshare/"
 
-          ssh -i ~/.ssh/ssh-key "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}" /bin/bash << 'EOF'
+          ssh -i ~/.ssh/ssh-key "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" /bin/bash << 'EOF'
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd /var/www/fileshare

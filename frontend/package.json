@@ -7,7 +7,8 @@
 		"@lusc/tsconfig": "^7.0.0",
 		"@types/he": "^1.2.3",
 		"@types/node": "^22.17.1",
-		"esbuild": "^0.25.8",
+		"concurrently": "^9.2.1",
+		"esbuild": "^0.25.9",
 		"eslint": "^9.33.0",
 		"types": "workspace:^",
 		"typescript": "^5.9.2"
@@ -17,14 +18,14 @@
 	},
 	"exports": {
 		".": "./dist/index.js",
-		"./static": "./src/static"
+		"./static": "./dist/static"
 	},
 	"license": "MIT",
 	"name": "frontend",
 	"private": true,
 	"scripts": {
-		"build": "tsc",
-		"build:w": "tsc --watch",
+		"build": "tsc -p tsconfig.build.json && node esbuild.ts",
+		"build:w": "concurrently -k \"tsc --watch -p tsconfig.build.json\" \"node esbuild.ts --watch\"",
 		"fmt": "eslint --fix"
 	},
 	"type": "module",
