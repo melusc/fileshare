@@ -135,10 +135,20 @@ app.use(async (_request, response) => {
 		.send(await render('404', {session: response.locals.session}));
 });
 
-const server = app.listen(env.port, '127.0.0.1', () => {
-	console.log('Listening on http://localhost:%s/', env.port);
+function onServerListening(error: unknown) {
+	if (error) {
+		console.error('Error creating server', error);
+		return;
+	}
+
+	const listening = env.socketPath ?? `http://${env.host}:${env.port}`;
+	console.log('Listening on %s', listening);
 	process.send?.('ready');
-});
+}
+
+const server = env.socketPath
+	? app.listen(env.socketPath, onServerListening)
+	: app.listen(env.port, env.host, onServerListening);
 
 cleanupBeforeExit(() => {
 	server.close();
