@@ -135,10 +135,9 @@ app.use(async (_request, response) => {
 		.send(await render('404', {session: response.locals.session}));
 });
 
-function onServerListening(error: unknown) {
+function onServerListening(error: Error | undefined) {
 	if (error) {
-		console.error('Error creating server', error);
-		return;
+		throw error;
 	}
 
 	const listening = env.socketPath ?? `http://${env.host}:${env.port}`;
