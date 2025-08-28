@@ -16,7 +16,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"morgan": "^1.10.1",
 		"multer": "^2.0.2",
-		"zod": "^4.1.1"
+		"zod": "^4.1.4"
 	},
 	"devDependencies": {
 		"@lusc/eslint-config": "^7.4.2",
@@ -35,7 +35,7 @@
 		"typescript": "^5.9.2"
 	},
 	"engines": {
-		"node": ">=24.6.0"
+		"node": ">=24.7.0"
 	},
 	"license": "MIT",
 	"name": "backend",
