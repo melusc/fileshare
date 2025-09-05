@@ -46,6 +46,7 @@ jobs:
           path: |
             .
             !**/node_modules
+            !.git
 
   upload:
     runs-on: ubuntu-latest
