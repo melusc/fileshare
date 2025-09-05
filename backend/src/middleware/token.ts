@@ -16,7 +16,6 @@
 
 import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
-// eslint-disable-next-line n/no-extraneous-import
 import type {StringValue} from 'ms';
 
 import env from '../env.ts';
