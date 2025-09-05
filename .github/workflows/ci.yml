@@ -76,6 +76,7 @@ jobs:
           rsync -vhaR --checksum --delete \
             -e "ssh -i ~/.ssh/ssh-key" \
             {backend,frontend}/{dist/,package.json} \
+            types/package.json \
             package.json pnpm-*.yaml \
             frontend/src/app.html \
             "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/var/www/fileshare/"
