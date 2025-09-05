@@ -1,0 +1,8 @@
+packages:
+  - types
+  - backend
+  - frontend
+
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver

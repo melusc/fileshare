@@ -46,7 +46,7 @@
 	"scripts": {
 		"build": "tsc && node --run esbuild",
 		"build:w": "node --run esbuild -- --watch",
-		"dev": "concurrently 'yarn:start:w' 'yarn:build:w'",
+		"dev": "concurrently 'pnpm:start:w' 'pnpm:build:w'",
 		"esbuild": "esbuild --outdir=dist --format=esm --platform=node --bundle --sourcemap --packages=external src/server.ts",
 		"fmt": "eslint --fix",
 		"start": "node --env-file-if-exists .env dist/server.js",
