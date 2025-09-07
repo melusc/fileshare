@@ -14,25 +14,22 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {Buffer} from 'node:buffer';
-import {randomBytes} from 'node:crypto';
-import {readFile, unlink, writeFile} from 'node:fs/promises';
-import path from 'node:path';
+import {unlink} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 
 import {Router} from 'express';
-import {fileTypeFromBuffer} from 'file-type';
 import {render} from 'frontend';
 import isPathInside from 'is-path-inside';
 import multer from 'multer';
 
+import {uploadFile} from '../api/file.ts';
 import {uploadsDirectory} from '../constants.ts';
 import {database, getUploads} from '../database.ts';
-import {rateLimitPost, rateLimitGetStatic} from '../middleware/rate-limit.ts';
-import {session, csrf} from '../middleware/token.ts';
+import {rateLimitGetStatic, rateLimitPost} from '../middleware/rate-limit.ts';
+import {csrf, session} from '../middleware/token.ts';
 
 export const uploadRouter: Router = Router();
-const multerMiddleware = multer({
+export const multerMiddleware = multer({
 	storage: multer.memoryStorage(),
 	limits: {
 		fileSize: 5e7, // 50 MB
@@ -40,14 +37,6 @@ const multerMiddleware = multer({
 });
 
 uploadRouter.use(session.guard());
-
-function randomFileId(idLength: number) {
-	const id = randomBytes(idLength).toString('base64url');
-	return {
-		id: id,
-		filePath: new URL(id, uploadsDirectory),
-	};
-}
 
 uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
@@ -89,48 +78,11 @@ uploadRouter.post(
 
 		const {longid} = (request.body ?? {}) as Record<string, unknown>;
 
-		const idLength = longid === 'on' ? 32 : 4;
-		let {id, filePath} = randomFileId(idLength);
-
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		while (true) {
-			try {
-				// eslint-disable-next-line security/detect-non-literal-fs-filename
-				await readFile(filePath);
-				({id, filePath} = randomFileId(idLength));
-			} catch {
-				break;
-			}
-		}
-
-		const mime = await fileTypeFromBuffer(request.file.buffer);
-		let filename = request.file.originalname.trim();
-		try {
-			// multer uses latin1 encoding
-			filename = Buffer.from(filename, 'latin1').toString('utf8');
-		} catch {}
-		filename &&= path.basename(filename);
-
-		database
-			.prepare(
-				`INSERT INTO uploads
-				(id, author, date, mime, filename)
-				values
-				(:id, :author, :date, :mime, :filename);
-			`,
-			)
-			.run({
-				id,
-				author: response.locals.session!.user,
-				date: new Date().toISOString(),
-				mime: mime?.mime ?? null,
-				// Turn empty string into null
-				filename: filename || null,
-			});
-
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
-		await writeFile(filePath, request.file.buffer);
-
+		const {id} = await uploadFile(
+			request.file,
+			response.locals.session!.user,
+			longid === 'on',
+		);
 		response.redirect(`/${id}`);
 	},
 );
@@ -160,7 +112,7 @@ uploadRouter.post(
 					session: response.locals.session,
 					uploads: getUploads(),
 					csrfToken: csrf.generate(response),
-					error: 'Missing id.',
+					error: 'Missing ID.',
 				}),
 			);
 			return;

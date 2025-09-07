@@ -23,5 +23,11 @@ export type Upload = {
 };
 
 export type Session = {
-	user: string;
+	readonly user: string;
+};
+
+export type ApiToken = {
+	readonly id: string;
+	readonly name: string;
+	readonly date: string;
 };

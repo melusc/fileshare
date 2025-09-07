@@ -27,6 +27,9 @@ export function header(session: Session | undefined) {
 	<a href="/upload">
 		<h1>Upload</h1>
 	</a>
+	<a href="/api">
+		<h1>API</h1>
+	</a>
 
 	<a class="login" href="${session ? '/logout' : '/login'}">
 		${session ? 'Log out' : 'Log in'}

@@ -63,6 +63,15 @@ database.exec(
 			filename TEXT,
 			FOREIGN KEY(author) REFERENCES logins(username)
 		);
+
+		CREATE TABLE IF NOT EXISTS apiTokens (
+			id TEXT PRIMARY KEY,
+			date TEXT NOT NULL,
+			owner TEXT NOT NULL,
+			token TEXT NOT NULL,
+			name TEXT NOT NULL,
+			FOREIGN KEY(owner) REFERENCES logins(username)
+		);
 	`,
 );
 

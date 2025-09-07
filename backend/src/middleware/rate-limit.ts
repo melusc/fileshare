@@ -55,3 +55,14 @@ export function rateLimitPost() {
 	});
 	return post;
 }
+
+let api: RateLimitRequestHandler | undefined;
+export function rateLimitApi() {
+	api ??= rateLimit({
+		windowMs: 5 * 60 * 1000,
+		limit: 50,
+		standardHeaders: true,
+		legacyHeaders: false,
+	});
+	return api;
+}

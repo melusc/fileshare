@@ -21,6 +21,7 @@ import type {Session} from 'types';
 import {$, type SafeString} from './$.js';
 import {header} from './components/header.js';
 import {type Parameters404, Route404} from './routes/404.js';
+import {RouteApi, type ParametersApi} from './routes/api.js';
 import {type ParametersIndex, RouteIndex} from './routes/index.js';
 import {type ParametersLogin, RouteLogin} from './routes/login.js';
 import {type ParametersUpload, RouteUpload} from './routes/upload.js';
@@ -30,6 +31,7 @@ type Arguments = {
 	upload: ParametersUpload;
 	login: ParametersLogin;
 	'404': Parameters404;
+	api: ParametersApi;
 };
 
 export async function render<View extends keyof Arguments>(
@@ -68,6 +70,12 @@ export async function render<View extends keyof Arguments>(
 		case '404': {
 			({title, styles} = Route404);
 			body = Route404.render();
+
+			break;
+		}
+		case 'api': {
+			({title, styles} = RouteApi);
+			body = RouteApi.render(variables as ParametersApi);
 
 			break;
 		}

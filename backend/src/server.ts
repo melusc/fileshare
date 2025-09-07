@@ -31,7 +31,8 @@ import {
 	rateLimitGetDatabase,
 	rateLimitGetStatic,
 } from './middleware/rate-limit.ts';
-import {session, csrf} from './middleware/token.ts';
+import {csrf, session} from './middleware/token.ts';
+import {apiRouter} from './routes/api.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
 
@@ -68,6 +69,7 @@ app.use(
 
 app.use('/login', loginRouter);
 app.use('/upload', uploadRouter);
+app.use('/api', apiRouter);
 
 app.use('/logout', rateLimitGetDatabase(), (_request, response) => {
 	response.clearCookie('session', {
@@ -92,10 +94,15 @@ app.get('/:id', rateLimitGetDatabase(), (request, response, next) => {
 			  }
 			| undefined;
 
-		if (row?.mime) {
+		if (!row) {
+			next();
+			return;
+		}
+
+		if (row.mime) {
 			response.setHeader('Content-Type', row.mime);
 		}
-		if (row?.filename) {
+		if (row.filename) {
 			const encoded = encodeURIComponent(row.filename);
 			response.setHeader(
 				'Content-Disposition',
@@ -105,10 +112,18 @@ app.get('/:id', rateLimitGetDatabase(), (request, response, next) => {
 			response.setHeader('Content-Disposition', 'inline');
 		}
 
-		response.sendFile(id, {
-			root: fileURLToPath(uploadsDirectory),
-			immutable: true,
-		});
+		response.sendFile(
+			id,
+			{
+				root: fileURLToPath(uploadsDirectory),
+				immutable: true,
+			},
+			(error: Error | undefined) => {
+				if (error) {
+					next();
+				}
+			},
+		);
 	} catch {
 		next();
 	}

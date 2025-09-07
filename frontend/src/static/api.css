@@ -1,0 +1,43 @@
+.tokens-table {
+	display: grid;
+	width: max-content;
+	align-items: center;
+	row-gap: 5px;
+	column-gap: 1em;
+
+	grid-template-columns: auto auto auto;
+	grid-auto-rows: 1fr;
+}
+
+.tokens-table,
+.one-time-show-token {
+	margin-top: 2em;
+}
+
+.tokens-header,
+.token-row {
+	display: grid;
+	grid-template-columns: subgrid;
+	grid-column: span 3;
+	align-items: baseline;
+}
+
+.tokens-header {
+	font-weight: 600;
+}
+
+input {
+	font: inherit;
+
+	outline: none;
+	border: 2px solid var(--theme-primary);
+	border-radius: 5px;
+	background: none;
+	padding: 3px 1em;
+}
+
+input[type='submit'] {
+	cursor: pointer;
+
+	transition: scale 50ms ease-in-out;
+}
