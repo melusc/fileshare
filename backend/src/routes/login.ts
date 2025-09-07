@@ -17,6 +17,7 @@
 import type {Buffer} from 'node:buffer';
 import {timingSafeEqual} from 'node:crypto';
 
+import {RelativeUrl} from '@lusc/util/relative-url';
 import {Router} from 'express';
 import {render} from 'frontend';
 import multer from 'multer';
@@ -108,6 +109,8 @@ loginRouter.post(
 		}
 
 		session.setCookie(username, response);
-		response.redirect(302, '/');
+		const {searchParams} = new RelativeUrl(request.originalUrl);
+		const redirectUrl = new RelativeUrl(searchParams.get('next') ?? '/');
+		response.redirect(302, redirectUrl.href);
 	},
 );

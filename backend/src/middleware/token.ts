@@ -14,6 +14,7 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import {RelativeUrl} from '@lusc/util/relative-url';
 import type {Request, RequestHandler, Response} from 'express';
 import jwtProvider from 'jsonwebtoken';
 import type {StringValue} from 'ms';
@@ -104,7 +105,13 @@ class Session extends Token<{user: string}> {
 				secure: true,
 			});
 
-			response.redirect(302, '/login');
+			const redirectUrl = new RelativeUrl('/login');
+			// Don't set if `/`,
+			// that is the default if omitted
+			if (request.originalUrl !== '/') {
+				redirectUrl.searchParams.set('next', request.originalUrl);
+			}
+			response.redirect(302, redirectUrl.href);
 		};
 	}
 
