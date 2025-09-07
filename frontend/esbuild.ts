@@ -34,6 +34,7 @@ const esbuildOptions = {
 	minify: true,
 	platform: 'browser',
 	entryPoints: ['src/static/*'],
+	logLevel: 'info',
 } satisfies esbuild.BuildOptions;
 
 if (flags.watch) {
