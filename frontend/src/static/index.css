@@ -1,7 +1,3 @@
-.uploads-title {
-	font-weight: 600;
-}
-
 .upload-entry,
 .uploads-title {
 	display: grid;
@@ -15,23 +11,4 @@
 	grid-template-columns: repeat(5, 1fr);
 	row-gap: 1em;
 	width: 100%;
-}
-
-.upload-delete {
-	outline: none;
-	border: 2px solid var(--theme-primary);
-	border-radius: 5px;
-	background: none;
-	padding: 5px 1em;
-	cursor: pointer;
-	width: max-content;
-	transition: scale 50ms ease-in-out;
-}
-
-.upload-delete:focus {
-	outline: 2px dashed #0d6efd;
-}
-
-.upload-delete:active {
-	scale: 0.95;
 }

@@ -18,3 +18,35 @@ html {
 * {
 	color: inherit;
 }
+
+button,
+input {
+	outline: none;
+	border-radius: 5px;
+	background: none;
+	padding: 5px 1em;
+
+	&:focus {
+		outline: 2px solid #0d6efd;
+	}
+}
+
+button,
+input[type='submit'],
+.border-theme {
+	border: 2px solid var(--theme-primary);
+}
+
+button,
+input[type='submit'] {
+	cursor: pointer;
+	transition: scale 50ms ease-in-out;
+
+	&:active {
+		scale: 0.95;
+	}
+}
+
+.font-bold {
+	font-weight: 600;
+}

@@ -4,6 +4,7 @@
 	align-items: center;
 	row-gap: 5px;
 	column-gap: 1em;
+	width: 100%;
 
 	grid-template-columns: auto auto auto;
 	grid-auto-rows: 1fr;
@@ -22,22 +23,19 @@
 	align-items: baseline;
 }
 
-.tokens-header {
-	font-weight: 600;
+.form-new-token {
+	display: flex;
+	column-gap: 5px;
+
+	& input {
+		font: inherit;
+	}
 }
 
-input {
-	font: inherit;
-
-	outline: none;
-	border: 2px solid var(--theme-primary);
-	border-radius: 5px;
-	background: none;
-	padding: 3px 1em;
+.button-new-token {
+	flex-grow: 1;
 }
 
-input[type='submit'] {
-	cursor: pointer;
-
-	transition: scale 50ms ease-in-out;
+.token-revoke {
+	width: 100%;
 }

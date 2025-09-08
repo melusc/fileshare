@@ -56,7 +56,7 @@ export const RouteIndex = {
 		return $`
 			<div class="uploads">
 				${error && $`<div class="error">${error}</div>`}
-				<div class="uploads-title">
+				<div class="uploads-title font-bold">
 					<div>ID</div>
 					<div>Type</div>
 					<div>Author</div>

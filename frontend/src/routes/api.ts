@@ -32,12 +32,18 @@ export const RouteApi = {
 
 	render({apiTokens, csrfToken, error, oneTimeShowToken}: ParametersApi) {
 		const newTokenButton = $`<form
+			class="form-new-token"
 			action="/api"
 			method="POST"
 			enctype="multipart/form-data"
 		>
 			<input type="hidden" name="csrf-token" value="${csrfToken}" />
-			<input placeholder="Token Description" type="text" name="name" required />
+			<input
+				class="border-theme"
+				placeholder="Token Description"
+				type="text"
+				name="name"
+				required />
 			<input type="submit" class="button-new-token" value="New Token" />
 		</form>`;
 
@@ -68,7 +74,7 @@ export const RouteApi = {
 			${
 				tableBody.length > 0 &&
 				$`<div class="tokens-table">
-				<div class="tokens-header">
+				<div class="tokens-header font-bold">
 					<div>Name</div>
 					<div>Date created</div>
 					<div>Revoke</div>
