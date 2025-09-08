@@ -124,6 +124,28 @@ uploadRouter.post(
 			return;
 		}
 
+		const sqlRow = database
+			.prepare('SELECT author FROM uploads WHERE id = :id')
+			.get({
+				id,
+			}) as
+			| {
+					author: string;
+			  }
+			| undefined;
+
+		if (sqlRow?.author !== response.locals.session!.user) {
+			response.status(403).send(
+				await render('index', {
+					session: response.locals.session,
+					uploads: getUploads(),
+					csrfToken: csrf.generate(response),
+					error: 'Not allowed to delete upload of other user.',
+				}),
+			);
+			return;
+		}
+
 		try {
 			database.prepare('DELETE FROM uploads WHERE id = :id;').run({
 				id,
