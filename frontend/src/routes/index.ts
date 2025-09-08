@@ -41,14 +41,14 @@ export const RouteIndex = {
 		const tableBody = uploads.map(
 			({id, author, date, mime}) => $`
 				<div class="upload-entry">
-					<a class="upload-link" href="/${id}">${id}</a>
-					<div class="upload-mime">${mime ?? ''}</div>
-					<div class="upload-author">${author}</div>
-					<time class="upload-date" datetime="${date}">${date}</time>
+					<a href="/${id}">${id}</a>
+					<div>${mime ?? ''}</div>
+					<div>${author}</div>
+					<time datetime="${date}">${date}</time>
 					<form action="/upload/delete" method="POST" enctype="multipart/form-data">
 						<input name="id" value="${id}" type="hidden">
 						<input name="csrf-token" value="${csrfToken}" type="hidden">
-						<input class="upload-delete" type="submit" value="Delete">
+						<input type="submit" value="Delete">
 					</form>
 				</div>`,
 		);

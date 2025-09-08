@@ -49,8 +49,8 @@ export const RouteApi = {
 
 		const tableBody = apiTokens.map(
 			({name, date, id}) => $`<div class="token-row">
-			<div class="token-name">${name}</div>
-			<time class="token-date" datetime="${date}">${date}</time>
+			<div>${name}</div>
+			<time datetime="${date}">${date}</time>
 			<form action="/api/token/revoke" method="POST" enctype="multipart/form-data">
 				<input type="hidden" name="csrf-token" value="${csrfToken}" />
 				<input type="submit" class="token-revoke" value="Revoke" />
