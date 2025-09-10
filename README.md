@@ -2,22 +2,26 @@
 
 Self-hosted, minimal file share.
 
-## Configuration
+## Configuration / env variables
 
-### BIND_PORT
+### FILESHARE_BIND_PORT
 
 TCP port to bind to. Default `3178`.
 
-### BIND_HOST
+### FILESHARE_BIND_HOST
 
 Interface to bind to. Default `127.0.0.1`.
 
-### BIND_SOCKET
+### FILESHARE_BIND_SOCKET
 
 Bind to unix socket. Default unset.
 
-Takes precedence if set.
+Takes precedence over port and host, if set.
 
-### SESSION_SECRET
+### FILESHARE_SESSION_SECRET
 
 Secret used for JWTs. Randomly generated if unset.
+
+### FILESHARE_BASE_URL
+
+Base URL that fileshare is served on. This value must be set!

@@ -22,6 +22,7 @@ import type {ApiToken, Session} from 'types';
 
 import {uploadFile} from '../api/file.ts';
 import {database} from '../database.ts';
+import env from '../env.ts';
 import {
 	rateLimitApi,
 	rateLimitGetStatic,
@@ -227,13 +228,11 @@ v1.use(
 			longid !== 'false',
 		);
 
-		const protocol = request.header('x-forwarded-proto') || request.protocol;
-		const host = request.header('x-forwarded-host') || request.host;
-		const absoluteUrl = `${protocol}://${host}/${body.id}`;
+		const url = new URL(`/${body.id}`, env.baseUrl);
 
 		response.status(201).json({
 			...body,
-			url: absoluteUrl,
+			url,
 		});
 	},
 );
