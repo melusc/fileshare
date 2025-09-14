@@ -16,7 +16,6 @@
 
 import {randomBytes} from 'node:crypto';
 import {stdin, stdout} from 'node:process';
-// eslint-disable-next-line n/no-unsupported-features/node-builtins
 import {createInterface} from 'node:readline/promises';
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
 import {DatabaseSync} from 'node:sqlite';
