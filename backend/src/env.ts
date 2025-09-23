@@ -33,11 +33,21 @@ if (!baseUrl) {
 	exit(1);
 }
 
+let trustProxy: string | boolean =
+	process.env['FILESHARE_TRUST_PROXY'] ?? 'loopback';
+
+if (/^(?:true|1)$/i.test(trustProxy)) {
+	trustProxy = true;
+} else if (/^(?:false|0)$/i.test(trustProxy)) {
+	trustProxy = false;
+}
+
 const env = {
 	port,
 	host,
 	socketPath,
 	sessionSecret,
 	baseUrl,
+	trustProxy,
 };
 export default env;
