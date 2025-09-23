@@ -25,3 +25,8 @@ Secret used for JWTs. Randomly generated if unset.
 ### FILESHARE_BASE_URL
 
 Base URL that fileshare is served on. This value must be set!
+
+### FILESHARE_TRUST_PROXY
+
+Set express' `trust proxy` value. See <https://expressjs.com/en/guide/behind-proxies.html>.
+When using `FILESHARE_BIND_SOCKET`, this can be set to `true`.
