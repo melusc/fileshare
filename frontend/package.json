@@ -6,7 +6,7 @@
 		"@lusc/eslint-config": "^8.0.1",
 		"@lusc/tsconfig": "^7.1.0",
 		"@types/he": "^1.2.3",
-		"@types/node": "^22.18.0",
+		"@types/node": "^24.9.1",
 		"concurrently": "^9.2.1",
 		"esbuild": "^0.25.9",
 		"eslint": "^9.35.0",
