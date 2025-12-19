@@ -32,6 +32,20 @@ function randomFileId(idLength: number) {
 	};
 }
 
+async function extendedFileType(buffer: Buffer): Promise<string | undefined> {
+	const mime = await fileTypeFromBuffer(buffer);
+	if (mime?.mime) {
+		return mime.mime;
+	}
+
+	const start = buffer.toString('utf8', 0, 300);
+	if (start.includes('<svg')) {
+		return 'image/svg+xml';
+	}
+
+	return undefined;
+}
+
 export async function uploadFile(
 	file: Express.Multer.File,
 	author: string,
@@ -54,7 +68,7 @@ export async function uploadFile(
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
 	} while (true);
 
-	const mime = await fileTypeFromBuffer(file.buffer);
+	const mime = await extendedFileType(file.buffer);
 	let filename = file.originalname.trim();
 	try {
 		// multer uses latin1 encoding
@@ -66,7 +80,7 @@ export async function uploadFile(
 		id,
 		author,
 		date: new Date().toISOString(),
-		mime: mime?.mime ?? null,
+		mime: mime ?? null,
 		// Turn empty string into null
 		filename: filename || null,
 	};
