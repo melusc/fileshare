@@ -14,35 +14,49 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import {$} from '../$.js';
 import {form} from '../components/form.js';
 import type {Route} from '../route.js';
 
 export type ParametersUpload = {
-	readonly error: string | undefined;
+	readonly error?: string;
 	readonly csrfToken: string;
+	readonly uploaded?: string;
 };
 
 export const RouteUpload = {
 	title: 'Upload',
-	styles: ['form.css'],
+	styles: ['form.css', 'upload.css'],
 
-	render({error, csrfToken}: ParametersUpload) {
-		return form(
-			[
-				{
-					name: 'file',
-					label: 'File',
-					type: 'file',
-				},
-				{
-					name: 'longid',
-					label: 'Use long id',
-					type: 'checkbox',
-				},
-			],
-			'Upload',
-			csrfToken,
-			error,
-		);
+	render({error, csrfToken, uploaded}: ParametersUpload) {
+		return $`
+			<div>
+				${
+					uploaded !== undefined &&
+					$`
+					<div class="upload-link">Uploaded to <a href="/${uploaded}">${uploaded}</a></div>
+
+					<h2>Upload another file</h2>
+				`
+				}
+
+				${form(
+					[
+						{
+							name: 'file',
+							label: 'File',
+							type: 'file',
+						},
+						{
+							name: 'longid',
+							label: 'Use long id',
+							type: 'checkbox',
+						},
+					],
+					'Upload',
+					csrfToken,
+					error,
+				)}
+			</div>`;
 	},
 } satisfies Route;

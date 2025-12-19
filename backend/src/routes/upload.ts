@@ -42,7 +42,6 @@ uploadRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
 	response.send(
 		await render('upload', {
 			session: response.locals.session,
-			error: undefined,
 			csrfToken: csrf.generate(response),
 		}),
 	);
@@ -83,7 +82,13 @@ uploadRouter.post(
 			response.locals.session!.user,
 			longid === 'on',
 		);
-		response.redirect(`/${id}`);
+		response.send(
+			await render('upload', {
+				session: response.locals.session,
+				uploaded: id,
+				csrfToken: csrf.generate(response),
+			}),
+		);
 	},
 );
 
