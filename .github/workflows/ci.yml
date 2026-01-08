@@ -66,11 +66,9 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
       - name: Sync
         run: |
-          # Make all directories
-          ssh -i ~/.ssh/ssh-key -o StrictHostKeyChecking=accept-new "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST}}" "
-            cd /var/www
-            mkdir -p fileshare
-          "
+          # Trust host public key
+          echo "${{ secrets.SSH_HOST }} ${{ secrets.SSH_HOST_KEY }}" >> ~/.ssh/known_hosts
+          ssh-keygen -Hf ~/.ssh/known_hosts
 
           # rsync all relevant files
           rsync -vhaR --checksum --delete \
@@ -79,17 +77,17 @@ jobs:
             types/package.json \
             package.json pnpm-*.yaml \
             frontend/src/app.html \
-            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/var/www/fileshare/"
+            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/opt/fileshare/"
 
           ssh -i ~/.ssh/ssh-key "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" /bin/bash << 'EOF'
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            cd /var/www/fileshare
+            cd /opt/fileshare
             corepack prepare
             corepack enable
             pnpm install --prod
-            cd ..
-            pm2 start fileshare.config.js > /dev/null
+            chown -R "${{ secrets.SSH_USERNAME }}:fileshare-management" node_modules/
+            sudo systemctl restart fileshare.service
           EOF
       - run: rm ~/.ssh/ssh-key
         if: always()
