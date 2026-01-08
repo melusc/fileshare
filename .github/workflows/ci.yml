@@ -85,8 +85,8 @@ jobs:
             cd /opt/fileshare
             corepack prepare
             corepack enable
-            pnpm install --prod
-            chown -R "${{ secrets.SSH_USERNAME }}:fileshare-management" node_modules/
+            CI=true pnpm install --prod
+            /opt/fileshare/post-deploy 2> /dev/null
             sudo systemctl restart fileshare.service
           EOF
       - run: rm ~/.ssh/ssh-key
