@@ -2,3 +2,28 @@
 	margin-bottom: 1em;
 	font-size: large;
 }
+
+#dropzone {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+
+	border: 0.5em dashed var(--theme-primary);
+	background-color: var(--text-light);
+
+	place-items: center;
+
+	&.shown {
+		display: grid;
+	}
+}
+
+.dropzone-text {
+	color: var(--theme-primary);
+	font-size: 3em;
+	text-align: center;
+	user-select: none;
+}

@@ -47,6 +47,7 @@ export async function render<View extends keyof Arguments>(
 	let body: SafeString;
 	let title: string | undefined;
 	let styles: readonly string[];
+	let scripts: readonly string[] | undefined;
 
 	switch (view) {
 		case 'index': {
@@ -56,7 +57,7 @@ export async function render<View extends keyof Arguments>(
 			break;
 		}
 		case 'upload': {
-			({title, styles} = RouteUpload);
+			({title, styles, scripts} = RouteUpload);
 			body = RouteUpload.render(variables as ParametersUpload);
 
 			break;
@@ -99,6 +100,7 @@ export async function render<View extends keyof Arguments>(
 				<main>
 					${body}
 				</main>
+				${scripts && scripts.map(source => $`<script src="/static/${source}" type="module"></script>`)}
 			`.render(),
 		);
 

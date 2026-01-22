@@ -27,6 +27,7 @@ export type ParametersUpload = {
 export const RouteUpload = {
 	title: 'Upload',
 	styles: ['form.css', 'upload.css'],
+	scripts: ['dropzone.js'],
 
 	render({error, csrfToken, uploaded}: ParametersUpload) {
 		return $`
@@ -57,6 +58,7 @@ export const RouteUpload = {
 					csrfToken,
 					error,
 				)}
-			</div>`;
+			</div>
+			<div id="dropzone"><div class="dropzone-text">Drop file anywhere</div></div>`;
 	},
 } satisfies Route;
