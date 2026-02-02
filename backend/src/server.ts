@@ -80,8 +80,10 @@ app.use('/logout', rateLimitGetDatabase(), (_request, response) => {
 	response.redirect('/login');
 });
 
-app.get('/:id', rateLimitGetDatabase(), (request, response, next) => {
-	const id = request.params['id']!;
+app.get<{
+	id: string;
+}>('/:id', rateLimitGetDatabase(), (request, response, next) => {
+	const id = request.params['id'];
 	try {
 		const row = database
 			.prepare('SELECT mime, filename FROM uploads WHERE id = :id')
