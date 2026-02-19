@@ -60,7 +60,6 @@ export async function uploadFile(
 		({id, filePath} = randomFileId(idLength));
 
 		try {
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await readFile(filePath);
 		} catch {
 			break;
@@ -95,7 +94,6 @@ export async function uploadFile(
 		)
 		.run(body);
 
-	// eslint-disable-next-line security/detect-non-literal-fs-filename
 	await writeFile(filePath, file.buffer);
 
 	return body;

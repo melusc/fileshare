@@ -155,7 +155,6 @@ uploadRouter.post(
 			database.prepare('DELETE FROM uploads WHERE id = :id;').run({
 				id,
 			});
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await unlink(uploadPath);
 		} catch {
 			// Do nothing, file doesn't exist
