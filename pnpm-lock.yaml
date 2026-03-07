@@ -51,7 +51,7 @@ importers:
         specifier: ^1.10.1
         version: 1.10.1
       multer:
-        specifier: ^2.1.0
+        specifier: ^2.1.1
         version: 2.1.1
       zod:
         specifier: ^4.3.6
