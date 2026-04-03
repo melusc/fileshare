@@ -68,7 +68,6 @@ class Session extends Token<{user: string}> {
 	}
 
 	middleware(): RequestHandler {
-		// eslint-disable-next-line unicorn/consistent-function-scoping
 		return (request, response, next) => {
 			const jwtPayload = this.#verifyRequest(request);
 
@@ -95,7 +94,6 @@ class Session extends Token<{user: string}> {
 	}
 
 	guard(): RequestHandler {
-		// eslint-disable-next-line unicorn/consistent-function-scoping
 		return (request, response, next) => {
 			if (this.#verifyRequest(request)) {
 				next();
