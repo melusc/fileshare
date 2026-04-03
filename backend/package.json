@@ -19,7 +19,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@lusc/eslint-config": "^9.0.0",
+		"@lusc/eslint-config": "^10.0.0",
 		"@lusc/tsconfig": "^7.2.0",
 		"@types/cookie-parser": "^1.4.10",
 		"@types/express": "^5.0.6",
