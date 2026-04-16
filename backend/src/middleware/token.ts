@@ -101,8 +101,9 @@ class Session extends Token<{user: string}> {
 	}
 
 	guard(): RequestHandler {
+		// eslint-disable-next-line unicorn/consistent-function-scoping
 		return (request, response, next) => {
-			if (this.#verifyRequest(request)) {
+			if (response.locals.session?.user) {
 				next();
 				return;
 			}
