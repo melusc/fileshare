@@ -69,6 +69,11 @@ class Session extends Token<{user: string}> {
 
 	middleware(): RequestHandler {
 		return (request, response, next) => {
+			if (response.locals.session) {
+				next();
+				return;
+			}
+
 			const jwtPayload = this.#verifyRequest(request);
 
 			if (!jwtPayload) {
