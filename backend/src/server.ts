@@ -32,6 +32,7 @@ import {
 	rateLimitGetStatic,
 } from './middleware/rate-limit.ts';
 import {csrf, session} from './middleware/token.ts';
+import {loginFromXAuthorisedAs} from './middleware/x-authorised-as.ts';
 import {apiRouter} from './routes/api.ts';
 import {loginRouter} from './routes/login.ts';
 import {uploadRouter} from './routes/upload.ts';
@@ -56,6 +57,7 @@ app.use(
 );
 app.use(morgan('dev'));
 
+app.use(loginFromXAuthorisedAs());
 app.use(session.middleware());
 
 app.use(

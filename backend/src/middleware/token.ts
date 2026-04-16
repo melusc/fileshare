@@ -80,6 +80,8 @@ class Session extends Token<{user: string}> {
 				value: {
 					user: jwtPayload.user,
 				},
+				writable: false,
+				configurable: false,
 			});
 
 			const {exp} = jwtPayload;

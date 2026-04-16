@@ -42,6 +42,10 @@ if (/^(?:true|1)$/i.test(trustProxy)) {
 	trustProxy = false;
 }
 
+const enableXAuthorisedAs = /^(?:true|1)$/i.test(
+	process.env['ENABLE_X_AUTHORISED_AS'] ?? 'false',
+);
+
 const env = {
 	port,
 	host,
@@ -49,5 +53,6 @@ const env = {
 	sessionSecret,
 	baseUrl,
 	trustProxy,
+	enableXAuthorisedAs,
 };
 export default env;
