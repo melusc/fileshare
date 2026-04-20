@@ -18,7 +18,7 @@ import type {Buffer} from 'node:buffer';
 import {timingSafeEqual} from 'node:crypto';
 
 import {RelativeUrl} from '@lusc/util/relative-url';
-import {Router} from 'express';
+import {Router, type Request, type Response} from 'express';
 import {render} from 'frontend';
 import multer from 'multer';
 
@@ -33,7 +33,18 @@ const multerMiddleware = multer({
 	storage: multer.memoryStorage(),
 });
 
-loginRouter.get('/', rateLimitGetStatic(), async (_request, response) => {
+function redirectNextPage(request: Request, response: Response) {
+	const {searchParams} = new RelativeUrl(request.originalUrl);
+	const redirectUrl = new RelativeUrl(searchParams.get('next') ?? '/');
+	response.redirect(302, redirectUrl.href);
+}
+
+loginRouter.get('/', rateLimitGetStatic(), async (request, response) => {
+	if (response.locals.session?.user) {
+		redirectNextPage(request, response);
+		return;
+	}
+
 	response.send(
 		await render('login', {
 			session: response.locals.session,
@@ -109,8 +120,6 @@ loginRouter.post(
 		}
 
 		session.setCookie(username, response);
-		const {searchParams} = new RelativeUrl(request.originalUrl);
-		const redirectUrl = new RelativeUrl(searchParams.get('next') ?? '/');
-		response.redirect(302, redirectUrl.href);
+		redirectNextPage(request, response);
 	},
 );
