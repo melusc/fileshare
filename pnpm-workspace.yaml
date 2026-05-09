@@ -3,8 +3,8 @@ packages:
   - backend
   - frontend
 
-ignoredBuiltDependencies:
-  - esbuild
-  - unrs-resolver
+allowBuilds:
+  esbuild: false
+  unrs-resolver: false
 
 trustPolicy: no-downgrade
