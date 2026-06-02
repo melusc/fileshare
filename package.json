@@ -10,7 +10,7 @@
 		"node": "^24.15.0 || ^26.0.0"
 	},
 	"name": "@lusc/fileshare",
-	"packageManager": "pnpm@11.0.6",
+	"packageManager": "pnpm@11.5.0",
 	"private": true,
 	"scripts": {
 		"build": "pnpm -r build",
