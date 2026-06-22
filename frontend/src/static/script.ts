@@ -1,7 +1,8 @@
 {
 	function enhanceDates(): void {
 		for (const element of document.querySelectorAll('time')) {
-			element.textContent = new Date(element.dateTime).toLocaleString();
+			const date = new Date(element.dateTime);
+			element.textContent = date.toLocaleString();
 		}
 	}
 

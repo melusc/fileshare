@@ -12,10 +12,12 @@
 	}
 
 	function handleDragEnter(event: DragEvent) {
-		if (event.dataTransfer!.types.includes('Files')) {
-			uploadVisual.classList.add('shown');
-			event.preventDefault();
+		if (!event.dataTransfer!.types.includes('Files')) {
+			return;
 		}
+
+		uploadVisual.classList.add('shown');
+		event.preventDefault();
 	}
 
 	function handleDragLeave(event: DragEvent) {

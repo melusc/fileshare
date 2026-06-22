@@ -94,12 +94,14 @@ apiRouter.post(
 			return;
 		}
 
-		const token = `fsa_${randomBytes(40).toString('base64url')}`.replaceAll(
-			'-',
-			'_',
-		);
-		const id = randomBytes(40).toString('base64url');
+		const token =
+			`fsa_${randomBytes(40).toBase64({alphabet: 'base64url'})}`.replaceAll(
+				'-',
+				'_',
+			);
+		const id = randomBytes(40).toBase64({alphabet: 'base64url'});
 
+		const now = new Date();
 		database
 			.prepare(
 				`INSERT INTO apiTokens
@@ -111,7 +113,7 @@ apiRouter.post(
 				id,
 				name: name.trim().slice(0, 128),
 				owner: session.user,
-				date: new Date().toISOString(),
+				date: now.toISOString(),
 				token,
 			});
 
@@ -187,7 +189,7 @@ v1.use(rateLimitApi(), (request, response, next) => {
 		.prepare('SELECT owner FROM apiTokens WHERE token = :token')
 		.get({
 			token,
-		}) as {owner: string} | undefined;
+		}) as undefined | {owner: string};
 
 	console.log({token});
 

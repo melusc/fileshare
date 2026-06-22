@@ -134,10 +134,10 @@ uploadRouter.post(
 			.get({
 				id,
 			}) as
+			| undefined
 			| {
 					author: string;
-			  }
-			| undefined;
+			  };
 
 		if (sqlRow?.author !== response.locals.session!.user) {
 			response.status(403).send(
