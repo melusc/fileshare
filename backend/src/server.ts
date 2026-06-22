@@ -93,11 +93,11 @@ app.get<{
 			.get({
 				id,
 			}) as
+			| undefined
 			| {
 					mime: string | null;
 					filename: string | null;
-			  }
-			| undefined;
+			  };
 
 		if (!row) {
 			next();

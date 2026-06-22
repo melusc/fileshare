@@ -12,6 +12,7 @@ export default [
 					},
 				},
 			],
+			'unicorn/no-top-level-side-effects': 'off',
 		},
 	},
 ];

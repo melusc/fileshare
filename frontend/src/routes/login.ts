@@ -26,8 +26,8 @@ export const RouteLogin = {
 	title: 'Login',
 	styles: ['form.css'],
 
-	render({error, csrfToken}: ParametersLogin) {
-		return form(
+	render: ({error, csrfToken}: ParametersLogin) =>
+		form(
 			[
 				{
 					label: 'Username',
@@ -43,6 +43,5 @@ export const RouteLogin = {
 			'Login',
 			csrfToken,
 			error,
-		);
-	},
+		),
 } satisfies Route;

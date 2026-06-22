@@ -17,7 +17,7 @@
 import {randomBytes} from 'node:crypto';
 import process, {exit} from 'node:process';
 
-const envPort = Number.parseInt(process.env['FILESHARE_BIND_PORT']!, 10);
+const envPort = Number(process.env['FILESHARE_BIND_PORT']!);
 const port = Number.isSafeInteger(envPort) ? envPort : 3178;
 const host = process.env['FILESHARE_BIND_HOST'] ?? '127.0.0.1';
 

@@ -85,15 +85,13 @@ export async function render<View extends keyof Arguments>(
 	}
 
 	template = template
-		.replace(
-			'%head%',
+		.replace('%head%', () =>
 			$`
 				<title>${title && `${title} | `}Fileshare</title>
 				${styles.map(href => $`<link rel="stylesheet" href="/static/${href}">`)}
 			`.render(),
 		)
-		.replace(
-			'%body%',
+		.replace('%body%', () =>
 			$`
 				${header(variables.session)}
 				<main>

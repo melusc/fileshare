@@ -26,7 +26,5 @@ export const Route404 = {
 	title: '404 — Page not found',
 	styles: ['404.css'],
 
-	render() {
-		return $`<h1 class="info-not-found">404 — Page not found</h1>`;
-	},
+	render: () => $`<h1 class="info-not-found">404 — Page not found</h1>`,
 } satisfies Route;

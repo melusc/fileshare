@@ -25,7 +25,7 @@ import {uploadsDirectory} from '../constants.ts';
 import {database} from '../database.ts';
 
 function randomFileId(idLength: number) {
-	const id = randomBytes(idLength).toString('base64url');
+	const id = randomBytes(idLength).toBase64({alphabet: 'base64url'});
 	return {
 		id,
 		filePath: new URL(id, uploadsDirectory),
@@ -75,10 +75,11 @@ export async function uploadFile(
 	} catch {}
 	filename &&= path.basename(filename);
 
+	const now = new Date();
 	const body = {
 		id,
 		author,
-		date: new Date().toISOString(),
+		date: now.toISOString(),
 		mime: mime ?? null,
 		// Turn empty string into null
 		filename: filename || null,
