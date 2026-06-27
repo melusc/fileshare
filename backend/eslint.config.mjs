@@ -4,11 +4,11 @@ export default [
 	...config,
 	{
 		rules: {
-			'unicorn/prevent-abbreviations': [
+			'unicorn/name-replacements': [
 				'error',
 				{
-					allowList: {
-						env: true,
+					replacements: {
+						env: false,
 					},
 				},
 			],
