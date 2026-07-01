@@ -91,8 +91,7 @@ loginRouter.post(
 				'SELECT passwordHash, passwordSalt from logins where LOWER(username) = :username',
 			)
 			.get({username: username.trim()}) as
-			| undefined
-			| {userId: string; passwordHash: Buffer; passwordSalt: Buffer};
+			undefined | {userId: string; passwordHash: Buffer; passwordSalt: Buffer};
 
 		if (!databaseResult) {
 			response.status(400).send(

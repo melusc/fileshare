@@ -17,11 +17,7 @@
 import he from 'he';
 
 export type Substitution =
-	| string
-	| SafeString
-	| ReadonlyArray<SafeString>
-	| boolean
-	| undefined;
+	string | SafeString | ReadonlyArray<SafeString> | boolean | undefined;
 
 export class SafeString {
 	constructor(private content: string) {}
