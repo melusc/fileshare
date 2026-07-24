@@ -4,13 +4,13 @@
 		"url": "https://github.com/melusc"
 	},
 	"devDependencies": {
-		"prettier": "^3.9.1"
+		"prettier": "^3.9.6"
 	},
 	"engines": {
 		"node": "^24.15.0 || ^26.0.0"
 	},
 	"name": "@lusc/fileshare",
-	"packageManager": "pnpm@11.9.0",
+	"packageManager": "pnpm@11.15.1",
 	"private": true,
 	"scripts": {
 		"build": "pnpm -r build",
