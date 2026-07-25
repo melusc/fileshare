@@ -17,8 +17,5 @@
 		"fmt": "prettier -w . && pnpm -r fmt",
 		"start": "pnpm --filter backend start"
 	},
-	"type": "module",
-	"resolutions": {
-		"jwa@npm:^1.4.1": "npm:^1.4.2"
-	}
+	"type": "module"
 }
