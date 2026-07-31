@@ -70,9 +70,10 @@ jobs:
           echo "${{ secrets.SSH_HOST }} ${{ secrets.SSH_HOST_KEY }}" >> ~/.ssh/known_hosts
           ssh-keygen -Hf ~/.ssh/known_hosts
 
-          # rsync all relevant files
-          rsync -vhaR --checksum --delete \
-            -e "ssh -i ~/.ssh/ssh-key" \
+          rsync --verbose --human-readable \
+            --recursive --checksum --relative \
+            --compress --delete \
+            --rsh "ssh -i ~/.ssh/ssh-key" \
             {backend,frontend}/{dist/,package.json} \
             types/package.json \
             package.json pnpm-*.yaml \
