@@ -22,6 +22,7 @@ export type ParametersUpload = {
 	readonly error?: string;
 	readonly csrfToken: string;
 	readonly uploaded?: string;
+	readonly customPath?: string;
 };
 
 export const RouteUpload = {
@@ -29,12 +30,12 @@ export const RouteUpload = {
 	styles: ['form.css', 'upload.css'],
 	scripts: ['dropzone.js'],
 
-	render: ({error, csrfToken, uploaded}: ParametersUpload) => $`
+	render: ({error, csrfToken, uploaded, customPath}: ParametersUpload) => $`
 			<div>
 				${
 					uploaded !== undefined &&
 					$`
-					<div class="upload-link">Uploaded to <a href="/${uploaded}">${uploaded}</a></div>
+					<div class="upload-link">Uploaded to <a href="/${encodeURIComponent(uploaded)}">${uploaded}</a></div>
 
 					<h2>Upload another file</h2>
 				`
@@ -51,6 +52,14 @@ export const RouteUpload = {
 							name: 'longid',
 							label: 'Use long id',
 							type: 'checkbox',
+							required: false,
+						},
+						{
+							name: 'custompath',
+							label: 'Custom Path',
+							type: 'text',
+							value: customPath ?? '',
+							required: false,
 						},
 					],
 					'Upload',

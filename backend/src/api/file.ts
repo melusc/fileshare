@@ -24,8 +24,10 @@ import {fileTypeFromBuffer} from 'file-type';
 import {uploadsDirectory} from '../constants.ts';
 import {database} from '../database.ts';
 
+export class CustomPathIsTakenError extends Error {}
+
 function randomFileId(idLength: number) {
-	const id = randomBytes(idLength).toBase64({alphabet: 'base64url'});
+	const id = randomBytes(idLength).toString('base64url');
 	return {
 		id,
 		filePath: new URL(id, uploadsDirectory),
@@ -50,22 +52,39 @@ export async function uploadFile(
 	file: Express.Multer.File,
 	author: string,
 	longId: boolean,
+	customPath?: string,
 ) {
 	let id: string;
 	let filePath: URL;
 
-	const idLength = longId ? 32 : 4;
+	if (customPath) {
+		filePath = new URL(customPath, uploadsDirectory);
 
-	do {
-		({id, filePath} = randomFileId(idLength));
-
+		let isAvailable = true;
 		try {
 			await readFile(filePath);
-		} catch {
-			break;
+			isAvailable = false;
+		} catch {}
+
+		if (!isAvailable) {
+			throw new CustomPathIsTakenError();
 		}
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
-	} while (true);
+
+		id = customPath;
+	} else {
+		const idLength = longId ? 32 : 4;
+
+		do {
+			({id, filePath} = randomFileId(idLength));
+
+			try {
+				await readFile(filePath);
+			} catch {
+				break;
+			}
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
+		} while (true);
+	}
 
 	const mime = await extendedFileType(file.buffer);
 	let filename = file.originalname.trim();

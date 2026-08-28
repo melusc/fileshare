@@ -22,7 +22,7 @@ import {render} from 'frontend';
 import isPathInside from 'is-path-inside';
 import multer from 'multer';
 
-import {uploadFile} from '../api/file.ts';
+import {CustomPathIsTakenError, uploadFile} from '../api/file.ts';
 import {uploadsDirectory} from '../constants.ts';
 import {database, getUploads} from '../database.ts';
 import {rateLimitGetStatic, rateLimitPost} from '../middleware/rate-limit.ts';
@@ -35,6 +35,22 @@ export const multerMiddleware = multer({
 		fileSize: 5e7, // 50 MB
 	},
 });
+
+// Must not start with _ (reserve as an internal prefix)
+const CUSTOM_PATH_VALIDATOR = /^[a-z\d\-. üöä,()][\w\-. üöä,()]{0,63}$/i;
+const RESERVED_PATHS = new Set<string>([
+	'login',
+	'logout',
+	'upload',
+	'static',
+	'api',
+	// Potential future use
+	'admin',
+	'profile',
+	'account',
+	'settings',
+	'config',
+]);
 
 uploadRouter.use(session.guard());
 
@@ -75,20 +91,68 @@ uploadRouter.post(
 			return;
 		}
 
-		const {longid} = (request.body ?? {}) as Record<string, unknown>;
+		const body = (request.body ?? {}) as Record<string, unknown>;
+		const {longid} = body;
+		let customPath = body['custompath'] as string;
 
-		const {id} = await uploadFile(
-			request.file,
-			response.locals.session!.user,
-			longid === 'on',
-		);
-		response.send(
-			await render('upload', {
-				session: response.locals.session,
-				uploaded: id,
-				csrfToken: csrf.generate(response),
-			}),
-		);
+		if (
+			typeof customPath !== 'string' ||
+			(customPath && !CUSTOM_PATH_VALIDATOR.test(customPath.trim()))
+		) {
+			response.status(400).send(
+				await render('upload', {
+					session: response.locals.session,
+					error: 'Invalid custom path.',
+					csrfToken: csrf.generate(response),
+					customPath: typeof customPath === 'string' ? customPath.trim() : '',
+				}),
+			);
+			return;
+		}
+
+		customPath = customPath.trim();
+
+		if (RESERVED_PATHS.has(customPath.toLowerCase())) {
+			response.status(400).send(
+				await render('upload', {
+					session: response.locals.session,
+					error: `${customPath} is reserved.`,
+					csrfToken: csrf.generate(response),
+					customPath: customPath,
+				}),
+			);
+			return;
+		}
+
+		try {
+			const {id} = await uploadFile(
+				request.file,
+				response.locals.session!.user,
+				longid === 'on',
+				customPath,
+			);
+			response.send(
+				await render('upload', {
+					session: response.locals.session,
+					uploaded: id,
+					csrfToken: csrf.generate(response),
+				}),
+			);
+		} catch (error: unknown) {
+			if (error instanceof CustomPathIsTakenError) {
+				response.status(400).send(
+					await render('upload', {
+						session: response.locals.session,
+						error: 'Custom path is already taken.',
+						csrfToken: csrf.generate(response),
+						customPath,
+					}),
+				);
+				return;
+			}
+
+			throw error;
+		}
 	},
 );
 

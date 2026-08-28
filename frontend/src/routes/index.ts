@@ -41,7 +41,7 @@ export const RouteIndex = {
 		const tableBody = uploads.map(
 			({id, author, date, mime}) => $`
 				<div class="upload-entry">
-					<a href="/${id}">${id}</a>
+					<a href="/${encodeURIComponent(id)}">${id}</a>
 					<div>${mime ?? ''}</div>
 					<div>${author}</div>
 					<time datetime="${date}">${date}</time>

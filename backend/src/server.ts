@@ -124,12 +124,14 @@ app.get<{
 				immutable: true,
 			},
 			(error: Error | undefined) => {
-				if (error) {
-					next();
-				}
+				if (!error) return;
+
+				console.error(error);
+				next();
 			},
 		);
-	} catch {
+	} catch (error: unknown) {
+		console.error(error);
 		next();
 	}
 });

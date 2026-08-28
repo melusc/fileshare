@@ -22,6 +22,7 @@ export function form(
 		name: string;
 		type: 'checkbox' | 'text' | 'file' | 'password' | 'hidden';
 		value?: string;
+		required?: boolean;
 	}>,
 	submitLabel: string,
 	csrfToken: string,
@@ -32,14 +33,14 @@ ${uploadError && $`<div class="error">${uploadError}</div>`}
 
 <form method="POST" enctype="multipart/form-data">
 	${inputs.map(
-		({label, type, name, value}) => $`
+		({label, type, name, value, required}) => $`
 		${type !== 'hidden' && $`<label for="${name}">${label}</label>`}
 		<input
 			type="${type}"
 			name="${name}"
 			id="${name}"
 			${typeof value === 'string' && $`value="${value}"`}
-			${type !== 'checkbox' && 'required'}
+			${required !== false && 'required'}
 		/>
 	`,
 	)}
