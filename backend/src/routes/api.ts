@@ -191,8 +191,6 @@ v1.use(rateLimitApi(), (request, response, next) => {
 			token,
 		}) as undefined | {owner: string};
 
-	console.log({token});
-
 	if (!owner) {
 		response.status(403).json({
 			error: 'forbidden',
