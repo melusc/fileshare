@@ -86,6 +86,17 @@ loginRouter.post(
 			return;
 		}
 
+		if (username.length > 128 || password.length > 1024) {
+			response.status(400).send(
+				await render('login', {
+					session: response.locals.session,
+					error: 'Username or password is too long.',
+					csrfToken: csrf.generate(response),
+				}),
+			);
+			return;
+		}
+
 		const databaseResult = database
 			.prepare(
 				'SELECT passwordHash, passwordSalt from logins where LOWER(username) = :username',
