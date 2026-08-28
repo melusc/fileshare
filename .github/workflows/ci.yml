@@ -66,29 +66,30 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
       - name: Sync
         run: |
-          # Trust host public key
-          echo "${{ secrets.SSH_HOST }} ${{ secrets.SSH_HOST_KEY }}" >> ~/.ssh/known_hosts
-          ssh-keygen -Hf ~/.ssh/known_hosts
+          set -euo pipefail
+
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s %s\n' "$SSH_HOST" "$SSH_HOST_KEY" > ~/.ssh/known_hosts
+
+          eval "$(ssh-agent -s)" >/dev/null
+          trap 'ssh-agent -k >/dev/null 2>&1 || true' EXIT INT TERM
+          printf '%s\n' "$SSH_KEY" | ssh-add -t 1200 -
+
+          SSH_OPTS='ssh -o StrictHostKeyChecking=yes -o BatchMode=yes'
 
           rsync --verbose --human-readable \
             --recursive --checksum --relative \
             --compress --delete \
-            --rsh "ssh -i ~/.ssh/ssh-key" \
+            --rsh "$SSH_OPTS" \
             {backend,frontend}/{dist/,package.json} \
             types/package.json \
             package.json pnpm-*.yaml \
             frontend/src/app.html \
-            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/opt/fileshare/"
+            "$SSH_USERNAME@$SSH_HOST:/opt/fileshare/"
 
-          ssh -i ~/.ssh/ssh-key "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" /bin/bash << 'EOF'
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            cd /opt/fileshare
-            corepack prepare
-            corepack enable
-            CI=true pnpm install --prod
-            /opt/fileshare/post-deploy 2> /dev/null
-            sudo systemctl restart fileshare.service
-          EOF
-      - run: rm ~/.ssh/ssh-key
-        if: always()
+          $SSH_OPTS "$SSH_USERNAME@$SSH_HOST" /opt/fileshare/post-deploy.sh
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_HOST_KEY: ${{ secrets.SSH_HOST_KEY }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
