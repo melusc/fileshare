@@ -36,34 +36,17 @@ jobs:
         run: |
           pnpm fmt
           git --no-pager diff --exit-code
-
-      - name: Upload build
-        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: build
-          path: |
-            .
-            !**/node_modules
-
-  upload:
+  docker:
     runs-on: ubuntu-latest
     needs: ci
-    name: Upload
+    name: Docker build and upload
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
-      - name: Download build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: build
-      - name: Write ssh key
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/ssh-key
-          chmod 600 ~/.ssh/ssh-key
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - run: docker build -t lusc.ch/fileshare . --progress=plain
+
       - name: Sync
         run: |
           set -euo pipefail
@@ -77,17 +60,9 @@ jobs:
 
           SSH_OPTS='ssh -o StrictHostKeyChecking=yes -o BatchMode=yes'
 
-          rsync --verbose --human-readable \
-            --recursive --checksum --relative \
-            --compress --delete \
-            --rsh "$SSH_OPTS" \
-            {backend,frontend}/{dist/,package.json} \
-            types/package.json \
-            package.json pnpm-*.yaml \
-            frontend/src/app.html \
-            "$SSH_USERNAME@$SSH_HOST:/opt/fileshare/"
-
-          $SSH_OPTS "$SSH_USERNAME@$SSH_HOST" /opt/fileshare/post-deploy.sh
+          docker save lusc.ch/fileshare:latest \
+            | gzip \
+            | $SSH_OPTS "$SSH_USERNAME@$SSH_HOST" "docker load && cd /opt/fileshare/ && docker compose up -d --pull never --remove-orphans"
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
