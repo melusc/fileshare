@@ -41,11 +41,7 @@ async function extendedFileType(buffer: Buffer): Promise<string | undefined> {
 	}
 
 	const start = buffer.toString('utf8', 0, 300);
-	if (start.includes('<svg')) {
-		return 'image/svg+xml';
-	}
-
-	return undefined;
+	return start.includes('<svg') ? 'image/svg+xml' : undefined;
 }
 
 export async function uploadFile(
