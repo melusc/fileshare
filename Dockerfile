@@ -37,6 +37,7 @@ RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
 
 COPY --from=builder /app/backend/dist ./backend/dist
 COPY --from=builder /app/frontend/dist ./frontend/dist
+COPY --from=builder /app/frontend/src/app.html ./frontend/src/
 
 RUN mkdir /app/data
 
