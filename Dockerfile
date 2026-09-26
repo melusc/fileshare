@@ -48,4 +48,5 @@ ENV FILESHARE_BIND_PORT=3000
 ENV FILESHARE_BIND_HOST=0.0.0.0
 ENV NODE_ENV=production
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "/app/backend/dist/server.js"]
