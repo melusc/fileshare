@@ -4,11 +4,13 @@
 
 	function handleDrop(event: DragEvent) {
 		const files = event.dataTransfer!.files;
-		if (files.length > 0) {
-			fileInput.files = files;
-			uploadVisual.classList.remove('shown');
-			event.preventDefault();
+		if (files.length === 0) {
+			return;
 		}
+
+		fileInput.files = files;
+		uploadVisual.classList.remove('shown');
+		event.preventDefault();
 	}
 
 	function handleDragEnter(event: DragEvent) {
