@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"he": "^1.2.0"
+		"he": "^2.0.0"
 	},
 	"devDependencies": {
 		"@lusc/eslint-config": "^20.0.0",
