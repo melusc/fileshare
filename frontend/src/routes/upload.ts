@@ -30,6 +30,7 @@ export const RouteUpload = {
 	styles: ['form.css', 'upload.css'],
 	scripts: ['dropzone.js'],
 
+	// eslint-disable-next-line unicorn/prefer-default-parameters
 	render: ({error, csrfToken, uploaded, customPath}: ParametersUpload) => $`
 			<div>
 				${
