@@ -14,7 +14,7 @@
 	License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import he from 'he';
+import * as he from 'he';
 
 export type Substitution =
 	string | SafeString | ReadonlyArray<SafeString> | boolean | undefined;
