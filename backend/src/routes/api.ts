@@ -94,12 +94,11 @@ apiRouter.post(
 			return;
 		}
 
-		const token =
-			`fsa_${randomBytes(40).toBase64({alphabet: 'base64url'})}`.replaceAll(
-				'-',
-				'_',
-			);
-		const id = randomBytes(40).toBase64({alphabet: 'base64url'});
+		const token = `fsa_${randomBytes(40).toString('base64url')}`.replaceAll(
+			'-',
+			'_',
+		);
+		const id = randomBytes(40).toString('base64url');
 
 		const now = new Date();
 		database
@@ -209,7 +208,7 @@ v1.use(rateLimitApi(), (request, response, next) => {
 	next();
 });
 
-v1.use(
+v1.post(
 	'/upload',
 	multerMiddleware.single('file'),
 	async (request, response) => {
@@ -236,3 +235,13 @@ v1.use(
 		});
 	},
 );
+
+const uptimeStart = Date.now();
+
+v1.get('/status', (_request, response) => {
+	response.status(200).json({
+		status: 'ok',
+		user: response.locals.session!.user,
+		uptime: Date.now() - uptimeStart,
+	});
+});
