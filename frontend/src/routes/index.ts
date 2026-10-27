@@ -39,7 +39,6 @@ export const RouteIndex = {
 		}
 
 		const tableBody = uploads.map(
-			// eslint-disable-next-line unicorn/prefer-default-parameters
 			({id, author, date, mime}) => $`
 				<div class="upload-entry">
 					<a href="/${encodeURIComponent(id)}">${id}</a>
